@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"target": "esnext",
+		"module": "esnext",
+		"strict": true,
+		"verbatimModuleSyntax": true,
+		"noUnusedLocals": true,
+		"noImplicitAny": true,
+		"noImplicitThis": true,
+		"noImplicitReturns": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUnusedParameters": true,
+		"experimentalDecorators": true,
+                "jsx": "preserve",
+                "jsxImportSource": null
+		"baseUrl": ".",
+		"paths": {}
+	},
+	"include": ["*.ts", "*.tsx"]
+}
