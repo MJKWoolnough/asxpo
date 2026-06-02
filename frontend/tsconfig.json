@@ -14,7 +14,7 @@
                 "jsx": "preserve",
                 "jsxImportSource": null
 		"baseUrl": ".",
-		"paths": {}
+		"paths": {"@bind": ["./libs/bind.ts"],"@conn": ["./libs/conn.ts"],"@css": ["./libs/css.ts"],"@dom": ["./libs/dom.ts"],"@drag": ["./libs/drag.ts"],"@html": ["./libs/html.ts"],"@inter": ["./libs/inter.ts"],"@load": ["./libs/load.ts"],"@misc": ["./libs/misc.ts"],"@nodes": ["./libs/nodes.ts"],"@pagination": ["./libs/pagination.ts"],"@router": ["./libs/router.ts"],"@rpc": ["./libs/rpc.ts"],"@settings": ["./libs/settings.ts"],"@svg": ["./libs/svg.ts"],"@typeguard": ["./libs/typeguard.ts"],"@urlstate": ["./libs/urlstate.ts"]}
 	},
 	"include": ["*.ts", "*.tsx"]
 }
