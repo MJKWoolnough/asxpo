@@ -11,7 +11,7 @@ declare namespace JSX {
 		[K in keyof AllElementsMap]: Omit<Partial<AllElementsMap[K]>, "style"> & {
 			[ev: `on${string}`]: EventListenerObject | Function;
 			[attribute: string]: unknown;
-			"style": Record<string, ToString | undefined> | CSSStyleDeclaration;
+			"style"?: Record<string, ToString | undefined> | CSSStyleDeclaration | string;
 		}
 	}
 }
