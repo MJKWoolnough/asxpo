@@ -15,3 +15,5 @@ declare namespace JSX {
 		}
 	}
 }
+
+declare const __jsxFragment: unknown;
