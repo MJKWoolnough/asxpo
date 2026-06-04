@@ -1,6 +1,8 @@
 package backend
 
 import (
+	"encoding/json"
+	"errors"
 	"net/http"
 
 	"vimagination.zapto.org/httpbuffer"
@@ -31,6 +33,10 @@ var httpErrors = map[error]int{}
 func responseCode(err error) int {
 	if c, ok := httpErrors[err]; ok {
 		return c
+	}
+
+	if _, ok := errors.AsType[*json.SyntaxError](err); ok {
+		return http.StatusBadRequest
 	}
 
 	return http.StatusInternalServerError
