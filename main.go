@@ -1,23 +1,34 @@
 package main
 
 import (
-	"encoding/json"
+	"flag"
+	"fmt"
 	"net/http"
+	"os"
 
+	"vimagination.zapto.org/asxpo/backend"
 	"vimagination.zapto.org/asxpo/frontend"
 )
 
 func main() {
-	http.Handle("GET /", frontend.Index)
-	http.Handle("GET /api/projects", http.HandlerFunc(projects))
-
-	http.ListenAndServe(":8080", nil)
+	if err := run(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 }
 
-func projects(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode([]string{
-		"ProjectA",
-		"ProjectB",
-	})
+func run() error {
+	var base string
+
+	flag.StringVar(&base, "p", "", "project directory")
+
+	flag.Parse()
+
+	b := backend.New(base)
+
+	http.Handle("GET /", frontend.Index)
+	http.Handle("POST /api/projects", http.HandlerFunc(b.CreateModule))
+	http.Handle("GET /api/projects", http.HandlerFunc(b.ListModules))
+
+	return http.ListenAndServe(":8080", nil)
 }
