@@ -2,24 +2,24 @@ import {add, render} from "@css";
 import {amendNode} from "@dom";
 import ready from "@load";
 import {router} from "@router";
-import {projects} from "./endpoints.js";
+import {modules} from "./endpoints.js";
 
 add({
-	"#projects": {
+	"#modules": {
 		"list-style": "none",
 		"padding-left": 0,
 	}
 });
 
-ready.then(projects).then(projects => {
+ready.then(modules).then(modules => {
 	amendNode(document.head, render());
 	amendNode(document.body, <>
 		<h1 style={{"font-family": "arial"}}>ΑΣΞΠΩ</h1>
-		{router().add("/project/:id", ({id}) => {
-			return <div>Project: {id}</div>
+		{router().add("/modules/:id", ({id}) => {
+			return <div>Module: {id}</div>
 		}).add("", () => {
-			return <ul id="projects">
-				{projects.map(project => <li><a href={"/project/"+project}>{project}</a></li>)}
+			return <ul id="modules">
+				{modules.map(m => <li><a href={"/modules/"+m.Name}>{m.Name}</a></li>)}
 			</ul>
 		})}
 	</>)

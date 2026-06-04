@@ -1,4 +1,4 @@
 import {HTTPRequest} from "@conn";
-import {Arr, Str} from "@typeguard";
+import {Arr, Obj, Str} from "@typeguard";
 
-export const projects = () => HTTPRequest("/api/projects", {"response": "json", "checker": Arr(Str())});
+export const modules = () => HTTPRequest("/api/modules", {"response": "json", "checker": Arr(Obj({"Name": Str(), "Description": Str()}))});
