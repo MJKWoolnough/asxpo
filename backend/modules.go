@@ -31,6 +31,12 @@ func (b *Backend) createModule(w http.ResponseWriter, r *http.Request) error {
 	moduleDir := filepath.Join(b.path, name)
 
 	if err := os.Mkdir(moduleDir, 0755); err != nil {
+		if os.IsExist(err) {
+			w.Header().Set("Allow", "GET, PATCH")
+
+			return ErrDuplicateName
+		}
+
 		return err
 	}
 
@@ -73,4 +79,7 @@ func (b *Backend) listModules(w http.ResponseWriter, r *http.Request) error {
 	return json.NewEncoder(w).Encode(modules)
 }
 
-var ErrInvalidName = errors.New("module names cannot contain slashes or null bytes")
+var (
+	ErrInvalidName   = errors.New("module names cannot contain slashes or null bytes")
+	ErrDuplicateName = errors.New("name already used")
+)

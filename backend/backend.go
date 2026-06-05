@@ -28,7 +28,9 @@ func handle(fn func(http.ResponseWriter, *http.Request) error, w http.ResponseWr
 	}.ServeHTTP(w, r)
 }
 
-var httpErrors = map[error]int{}
+var httpErrors = map[error]int{
+	ErrDuplicateName: http.StatusMethodNotAllowed,
+}
 
 func responseCode(err error) int {
 	if c, ok := httpErrors[err]; ok {
