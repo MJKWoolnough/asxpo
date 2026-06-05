@@ -1,3 +1,4 @@
+import bind from "@bind";
 import {add, render} from "@css";
 import {amendNode} from "@dom";
 import ready from "@load";
@@ -11,13 +12,17 @@ add({
 	}
 });
 
-ready.then(modules).then(modules => {
+ready.then(() => {
 	amendNode(document.head, render());
 	amendNode(document.body, <>
 		<h1 style={{"font-family": "arial"}}>ΑΣΞΠΩ</h1>
 		{router().add("/modules/:id", ({id}) => {
 			return <div>Module: {id}</div>
 		}).add("", () => {
+			const moduleList = bind([] as {Name: string; Description: string}[]);
+
+			modules().then(moduleList);
+
 			return <div>
 				<button onclick={() => {
 					const name = prompt("Enter module name:"),
@@ -33,16 +38,20 @@ ready.then(modules).then(modules => {
 					.then(() => goto("/modules/"+name))
 					.catch(e => alert("Failed to create environment: " + e.message))
 				}}>Create Module</button>
-				<ul id="modules">
-					{modules.map(m => <li>
+				{moduleList.toDOM(<ul id="modules" />, m => {
+					return <li>
 						<a href={"/modules/"+m.Name}>{m.Name}</a>
 						<button onclick={() => {
+							if (!confirm("Are you sure you wish to delete module: " + m.Name)) {
+								return;
+							}
+
 							deleteModule(m.Name)
-							.then(() => {})
+							.then(() => modules().then(moduleList))
 							.catch(e => alert("Failed to delete environment: " + e.message));
 						}}>Delete</button>
-					</li>)}
-				</ul>
+					</li>
+				})}
 			</div>
 		})}
 	</>)
