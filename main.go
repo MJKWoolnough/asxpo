@@ -27,7 +27,7 @@ func run() error {
 	b := backend.New(base)
 
 	http.Handle("GET /", frontend.Index)
-	http.Handle("POST /api/modules", http.HandlerFunc(b.CreateModule))
+	http.Handle("PUT /api/modules/{module}", http.HandlerFunc(b.CreateModule))
 	http.Handle("GET /api/modules", http.HandlerFunc(b.ListModules))
 
 	return http.ListenAndServe(":8080", nil)
