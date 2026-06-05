@@ -3,6 +3,7 @@ package backend
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -16,11 +17,6 @@ func (b *Backend) CreateModule(w http.ResponseWriter, r *http.Request) {
 	handle(b.createModule, w, r)
 }
 
-type module struct {
-	Name        string
-	Description string
-}
-
 func (b *Backend) createModule(w http.ResponseWriter, r *http.Request) error {
 	name := r.PathValue("module")
 
@@ -32,7 +28,7 @@ func (b *Backend) createModule(w http.ResponseWriter, r *http.Request) error {
 
 	if err := os.Mkdir(moduleDir, 0755); err != nil {
 		if os.IsExist(err) {
-			w.Header().Set("Allow", "GET, PATCH")
+			w.Header().Set("Allow", "DELETE, GET, PATCH")
 
 			return ErrDuplicateName
 		}
@@ -54,6 +50,11 @@ func (b *Backend) createModule(w http.ResponseWriter, r *http.Request) error {
 
 func (b *Backend) ListModules(w http.ResponseWriter, r *http.Request) {
 	handle(b.listModules, w, r)
+}
+
+type module struct {
+	Name        string
+	Description string
 }
 
 func (b *Backend) listModules(w http.ResponseWriter, r *http.Request) error {
@@ -79,7 +80,29 @@ func (b *Backend) listModules(w http.ResponseWriter, r *http.Request) error {
 	return json.NewEncoder(w).Encode(modules)
 }
 
+func (b *Backend) DeleteModule(w http.ResponseWriter, r *http.Request) {
+	handle(b.deleteModule, w, r)
+}
+
+func (b *Backend) deleteModule(w http.ResponseWriter, r *http.Request) error {
+	name := r.PathValue("module")
+
+	if strings.ContainsAny(name, "/\x00") {
+		return ErrInvalidName
+	}
+
+	err := os.RemoveAll(filepath.Join(b.path, name))
+	if os.IsExist(err) {
+		w.Header().Set("Allow", "GET, PUT")
+
+		return fmt.Errorf("%w: %s", ErrNoModule, name)
+	}
+
+	return err
+}
+
 var (
 	ErrInvalidName   = errors.New("module names cannot contain slashes or null bytes")
 	ErrDuplicateName = errors.New("name already used")
+	ErrNoModule      = errors.New("no module with that name")
 )
