@@ -33,8 +33,10 @@ var httpErrors = map[error]int{
 }
 
 func responseCode(err error) int {
-	if c, ok := httpErrors[err]; ok {
-		return c
+	for e, resp := range httpErrors {
+		if errors.Is(err, e) {
+			return resp
+		}
 	}
 
 	if _, ok := errors.AsType[*json.SyntaxError](err); ok {
