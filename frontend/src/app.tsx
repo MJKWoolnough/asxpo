@@ -2,7 +2,7 @@ import {add, render} from "@css";
 import {amendNode} from "@dom";
 import ready from "@load";
 import {goto, router} from "@router";
-import {createModule, modules} from "./endpoints.js";
+import {createModule, deleteModule, modules} from "./endpoints.js";
 
 add({
 	"#modules": {
@@ -34,7 +34,14 @@ ready.then(modules).then(modules => {
 					.catch(e => alert("Failed to create environment: " + e.message))
 				}}>Create Module</button>
 				<ul id="modules">
-					{modules.map(m => <li><a href={"/modules/"+m.Name}>{m.Name}</a></li>)}
+					{modules.map(m => <li>
+						<a href={"/modules/"+m.Name}>{m.Name}</a>
+						<button onclick={() => {
+							deleteModule(m.Name)
+							.then(() => {})
+							.catch(e => alert("Failed to delete environment: " + e.message));
+						}}>Delete</button>
+					</li>)}
 				</ul>
 			</div>
 		})}
