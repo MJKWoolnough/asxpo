@@ -27,11 +27,7 @@ func run() error {
 	b := backend.New(base)
 
 	http.Handle("GET /", frontend.Index)
-	http.Handle("GET /api/modules", http.HandlerFunc(b.ListModules))
-	http.Handle("GET /api/modules/{module}", http.HandlerFunc(b.GetModule))
-	http.Handle("PUT /api/modules/{module}", http.HandlerFunc(b.SetModule))
-	http.Handle("POST /api/modules/{module}/{name}", http.HandlerFunc(b.RenameModule))
-	http.Handle("DELETE /api/modules/{module}", http.HandlerFunc(b.DeleteModule))
+	http.Handle("/api/", http.StripPrefix("/api", b))
 
 	return http.ListenAndServe(":8080", nil)
 }
