@@ -41,6 +41,7 @@ func handle(fn func(http.ResponseWriter, *http.Request) error, w http.ResponseWr
 
 var httpErrors = map[error]int{
 	ErrDuplicateName: http.StatusConflict,
+	ErrInvalidName:   http.StatusUnprocessableEntity,
 	ErrNoModule:      http.StatusNotFound,
 }
 
