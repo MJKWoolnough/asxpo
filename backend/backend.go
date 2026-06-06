@@ -30,7 +30,7 @@ func handle(fn func(http.ResponseWriter, *http.Request) error, w http.ResponseWr
 
 var httpErrors = map[error]int{
 	ErrDuplicateName: http.StatusMethodNotAllowed,
-	ErrNoModule:      http.StatusMethodNotAllowed,
+	ErrNoModule:      http.StatusNotFound,
 }
 
 func responseCode(err error) int {

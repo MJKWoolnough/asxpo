@@ -7,17 +7,18 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 )
 
 const description = "description"
 
-func (b *Backend) CreateModule(w http.ResponseWriter, r *http.Request) {
-	handle(b.createModule, w, r)
+func (b *Backend) SetModule(w http.ResponseWriter, r *http.Request) {
+	handle(b.setModule, w, r)
 }
 
-func (b *Backend) createModule(w http.ResponseWriter, r *http.Request) error {
+func (b *Backend) setModule(w http.ResponseWriter, r *http.Request) error {
 	name := r.PathValue("module")
 
 	if strings.ContainsAny(name, "/\x00") {
@@ -26,14 +27,14 @@ func (b *Backend) createModule(w http.ResponseWriter, r *http.Request) error {
 
 	moduleDir := filepath.Join(b.path, name)
 
-	if err := os.Mkdir(moduleDir, 0755); err != nil {
-		if os.IsExist(err) {
-			w.Header().Set("Allow", "DELETE, GET, PATCH")
+	ret := http.StatusCreated
 
-			return ErrDuplicateName
+	if err := os.Mkdir(moduleDir, 0755); err != nil {
+		if !os.IsExist(err) {
+			return err
 		}
 
-		return err
+		ret = http.StatusNoContent
 	}
 
 	f, err := os.Create(filepath.Join(moduleDir, description))
@@ -45,7 +46,13 @@ func (b *Backend) createModule(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	return f.Close()
+	if err := f.Close(); err != nil {
+		return err
+	}
+
+	w.WriteHeader(ret)
+
+	return nil
 }
 
 func (b *Backend) ListModules(w http.ResponseWriter, r *http.Request) {
@@ -80,6 +87,58 @@ func (b *Backend) listModules(w http.ResponseWriter, r *http.Request) error {
 	return json.NewEncoder(w).Encode(modules)
 }
 
+func (b *Backend) GetModule(w http.ResponseWriter, r *http.Request) {
+	handle(b.getModule, w, r)
+}
+
+func (b *Backend) getModule(w http.ResponseWriter, r *http.Request) error {
+	name := r.PathValue("module")
+	base := filepath.Join(b.path, name)
+
+	desc, err := os.ReadFile(filepath.Join(base, description))
+	if err != nil {
+		if os.IsNotExist(err) {
+			return ErrNoModule
+		}
+
+		return err
+	}
+
+	_, err = w.Write(desc)
+
+	return err
+}
+
+func (b *Backend) RenameModule(w http.ResponseWriter, r *http.Request) {
+	handle(b.renameModule, w, r)
+}
+
+func (b *Backend) renameModule(w http.ResponseWriter, r *http.Request) error {
+	name := r.PathValue("module")
+	newName := r.PathValue("name")
+
+	if name == newName {
+		w.WriteHeader(http.StatusNotModified)
+
+		return nil
+	}
+
+	err := os.Rename(filepath.Join(b.path, name), filepath.Join(b.path, newName))
+	if os.IsNotExist(err) {
+		w.Header().Set("Allow", "GET, PUT")
+
+		return fmt.Errorf("%w: %s", ErrNoModule, name)
+	} else if err != nil {
+		return err
+	}
+
+	w.Header().Set("Location", path.Join(path.Dir(path.Dir(r.URL.Path)), newName))
+
+	w.WriteHeader(http.StatusCreated)
+
+	return nil
+}
+
 func (b *Backend) DeleteModule(w http.ResponseWriter, r *http.Request) {
 	handle(b.deleteModule, w, r)
 }
@@ -92,7 +151,7 @@ func (b *Backend) deleteModule(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	err := os.RemoveAll(filepath.Join(b.path, name))
-	if os.IsExist(err) {
+	if os.IsNotExist(err) {
 		w.Header().Set("Allow", "GET, PUT")
 
 		return fmt.Errorf("%w: %s", ErrNoModule, name)
