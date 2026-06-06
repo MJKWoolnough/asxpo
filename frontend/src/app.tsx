@@ -3,7 +3,7 @@ import {add, render} from "@css";
 import {amendNode} from "@dom";
 import ready from "@load";
 import {goto, router} from "@router";
-import {createModule, deleteModule, modules} from "./endpoints.js";
+import {setModule, deleteModule, modules} from "./endpoints.js";
 
 add({
 	"#modules": {
@@ -34,7 +34,7 @@ ready.then(() => {
 						return;
 					}
 
-					createModule(name, description ?? "")
+					setModule(name, description ?? "")
 					.then(() => goto("/modules/"+name))
 					.catch(e => alert("Failed to create environment: " + e.message))
 				}}>Create Module</button>
