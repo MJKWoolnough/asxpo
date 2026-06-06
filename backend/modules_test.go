@@ -99,6 +99,12 @@ func TestModules(t *testing.T) {
 			},
 		},
 		{
+			Method:   http.MethodPost,
+			URL:      "/modules/another-module/new-name",
+			Code:     http.StatusConflict,
+			Response: "name already used: new-name\n",
+		},
+		{
 			Method:   http.MethodGet,
 			URL:      "/modules/some-module",
 			Code:     http.StatusNotFound,
