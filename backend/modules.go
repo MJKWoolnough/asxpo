@@ -127,6 +127,8 @@ func (b *backend) renameModule(w http.ResponseWriter, r *http.Request) error {
 	err := os.Rename(filepath.Join(b.path, name), filepath.Join(b.path, newName))
 	if os.IsNotExist(err) {
 		return fmt.Errorf("%w: %s", ErrNoModule, name)
+	} else if os.IsExist(err) {
+		return fmt.Errorf("%w: %s", ErrDuplicateName, newName)
 	} else if err != nil {
 		return err
 	}
