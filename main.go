@@ -26,7 +26,7 @@ func run() error {
 
 	b := backend.New(base)
 
-	http.Handle("GET /", frontend.Index)
+	http.Handle("/", frontend.Index)
 	http.Handle("/api/", http.StripPrefix("/api", b))
 
 	return http.ListenAndServe(":8080", nil)
