@@ -1,11 +1,15 @@
 vimagination.zapto.org/httpbuffer v1.1.4 h1:f4IAM1Rim14j4Luve70mAtm6iWupMoMun68Ez91+9jE=
 vimagination.zapto.org/httpbuffer v1.1.4/go.mod h1:9fqSQiOj7vkizDrNDI8Ws6By82rDlSeW/Muesf29Eeo=
-vimagination.zapto.org/httpencoding v1.1.1 h1:QKE0Cz6yq50DtoWnPunBCKEUvh2loyT5q8+hA9nlzDk=
-vimagination.zapto.org/httpencoding v1.1.1/go.mod h1:jnEwxHVkbtkSBKt42IeT4FoNhRjDUqI1uBYjL9pmY3o=
+vimagination.zapto.org/httpembed v1.4.1 h1:dmZ3fcYxzMmLC4Lpw8GKM3nQTK4u70VCntpbfadg2Hw=
+vimagination.zapto.org/httpembed v1.4.1/go.mod h1:hCiEAdA0eabVFCiupL8E0/ZkS974ZBbjSxG01O1Ipdg=
+vimagination.zapto.org/httpencoding v1.1.2 h1:kpxoyNoEzddQxp0fhibxuo3deZm3p0w/5vEiY2kr2Ko=
+vimagination.zapto.org/httpencoding v1.1.2/go.mod h1:jnEwxHVkbtkSBKt42IeT4FoNhRjDUqI1uBYjL9pmY3o=
 vimagination.zapto.org/httpwrap v1.0.1 h1:Gmvl/z456oRxLZzrWPIo3QRvhsZ5weeSg0TKaa/N0Ek=
 vimagination.zapto.org/httpwrap v1.0.1/go.mod h1:5igD7pWwU/z1PKM9a96lgxdPe31GsncUVz4KdjTdF+U=
 vimagination.zapto.org/javascript v1.7.1 h1:Txxg9dTmWEj3bUHyAAZH5S4IAKaI2ZOkBzzbniP2/WM=
 vimagination.zapto.org/javascript v1.7.1/go.mod h1:t1Pj/bA/FDoAXk6/LwH1z357y2KyoPIqWw+sgRKTW0s=
+vimagination.zapto.org/memfs v1.0.0 h1:uOami0c0ZGYiMe7yy2T78xwe39cL4kQXXgrjCqdDN+Y=
+vimagination.zapto.org/memfs v1.0.0/go.mod h1:7nxyPwJQ5H79BQrz2j1mPE4Bx0jo8QUsZfD2sZtFACA=
 vimagination.zapto.org/parser v1.2.3 h1:OxtKZw0slZkt8c9ixfUAAWd6t30UwZerxPJJSyG34z0=
 vimagination.zapto.org/parser v1.2.3/go.mod h1:MxM1MZY6A9AeEx6nahIQ6MJaGZqX80n6Vm3zGVqV9FU=
 vimagination.zapto.org/tsserver v1.3.1 h1:8zu1y+hJBY9zf3UVFFV+BwRPPewG1p6QVmikdOPO6I8=
