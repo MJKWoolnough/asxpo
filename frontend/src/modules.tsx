@@ -3,11 +3,21 @@ import CSS from "@css";
 import {amendNode, bindCustomElement} from "@dom";
 import {goto} from "@router";
 import {deleteModule, modules, setModule} from "./endpoints.js";
+import {Add, Remove} from "./symbols.js";
 
 const css = [new CSS().add({
 	"ul": {
 		"list-style": "none",
 		"padding-left": 0
+	},
+	"button": {
+		"border": 0,
+		"background": "none",
+		"cursor": "pointer",
+
+		">svg": {
+			"width": "1em"
+		}
 	}
 })];
 
@@ -31,7 +41,7 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 				setModule(name, description ?? "")
 				.then(() => goto("/modules/"+name))
 				.catch(e => alert("Failed to create environment: " + e.message))
-			}}>Create Module</button>
+			}}><Add title="Add Module" /></button>
 			{this.#moduleList.toDOM(<ul />, m => {
 				return <li>
 					<a href={"/modules/"+m.Name}>{m.Name}</a>
@@ -43,7 +53,7 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 						deleteModule(m.Name)
 						.then(() => modules().then(this.#moduleList))
 						.catch(e => alert("Failed to delete environment: " + e.message));
-					}}>Delete</button>
+					}}><Remove title="Remove Module" /></button>
 				</li>
 			})}
 		</>).adoptedStyleSheets = css;
