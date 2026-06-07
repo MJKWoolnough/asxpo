@@ -4,12 +4,7 @@ import ready from "@load";
 import {router} from "@router";
 import Modules from "./modules.js";
 
-add({
-	"#modules": {
-		"list-style": "none",
-		"padding-left": 0,
-	}
-});
+add({});
 
 ready.then(() => {
 	amendNode(document.head, render());

@@ -1,7 +1,15 @@
 import bind from "@bind";
+import CSS from "@css";
 import {amendNode, bindCustomElement} from "@dom";
 import {goto} from "@router";
 import {deleteModule, modules, setModule} from "./endpoints.js";
+
+const css = [new CSS().add({
+	"ul": {
+		"list-style": "none",
+		"padding-left": 0
+	}
+})];
 
 export default bindCustomElement("aspxo-modules", class Modules extends HTMLElement {
 	#moduleList = bind([] as {Name: string; Description: string}[]);
@@ -9,7 +17,7 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 	constructor() {
 		super();
 
-		amendNode(this.attachShadow({"mode": "open"}), <div>
+		amendNode(this.attachShadow({"mode": "open"}), <>
 			<button onclick={() => {
 				const name = prompt("Enter module name:"),
 				      description = prompt("Enter module description:");
@@ -24,7 +32,7 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 				.then(() => goto("/modules/"+name))
 				.catch(e => alert("Failed to create environment: " + e.message))
 			}}>Create Module</button>
-			{this.#moduleList.toDOM(<ul id="modules" />, m => {
+			{this.#moduleList.toDOM(<ul />, m => {
 				return <li>
 					<a href={"/modules/"+m.Name}>{m.Name}</a>
 					<button onclick={() => {
@@ -38,7 +46,7 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 					}}>Delete</button>
 				</li>
 			})}
-		</div>);
+		</>).adoptedStyleSheets = css;
 	}
 
 	connectedCallback() {
