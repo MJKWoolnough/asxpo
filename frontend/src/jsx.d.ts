@@ -15,6 +15,12 @@ declare namespace JSX {
 
 	type IntrinsicElements = {
 		[K in keyof AllElementsMap]: ElementType<AllElementsMap[K]>;
+	} & {
+		[K in keyof HTMLElementTagNameMap as `html:${K}`]: ElementType<HTMLElementTagNameMap[K]>;
+	} & {
+		[K in keyof SVGElementTagNameMap as `svg:${K}`]: ElementType<SVGElementTagNameMap[K]>;
+	} & {
+		[K in keyof MathMLElementTagNameMap as `math:${K}`]: ElementType<MathMLElementTagNameMap[K]>;
 	}
 }
 
