@@ -1,6 +1,6 @@
 #!/bin/bash
 
-jspacker -H src/index.html -b src/ -i /index.html -P -x "{{if .InHTML}}import {TAG_NAME} from '@html';{{else if .InSVG}}import {TAG_NAME} from '@svg';{{end}}TAG_NAME({{if .HasParams}}PARAMS{{end}}{{if .HasChildren}}{{if .HasParams}},{{end}}CHILDREN{{end}})" -M '["terser", "-m", "--module", "--compress", "pure_getters,passes=3", "--ecma", "2020"]' -o index.html;
+jspacker -o index.html -H src/index.html -b src/ -i /index.html -P -x "$(grep '`' index_dev.go | cut -d'`' -f2)" -n -M '["terser", "-m", "--module", "--compress", "pure_getters,passes=3", "--ecma", "2020"]';
 
 declare size="$(stat -c %s index.html)";
 
