@@ -10,7 +10,7 @@ const css = [new CSS().add({
 		"list-style": "none",
 		"padding-left": 0
 	},
-	"button": {
+	"button:has(>svg)": {
 		"border": 0,
 		"background": "none",
 		"cursor": "pointer",
@@ -18,6 +18,11 @@ const css = [new CSS().add({
 		">svg": {
 			"width": "1em"
 		}
+	},
+	"label": {
+		"display": "inline-block",
+		"width": "9em",
+		"text-align": "right"
 	}
 })];
 
@@ -28,19 +33,31 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 		super();
 
 		amendNode(this.attachShadow({"mode": "open"}), <>
-			<button onclick={() => {
-				const name = prompt("Enter module name:"),
-				      description = prompt("Enter module description:");
+			<button onclick={function (this: HTMLButtonElement) {
+				const name = <input id="module_add_name" type="text" />,
+				      desc = <textarea id="module_add_desc" />,
+				      overlay = <dialog id="module_add" onclose={() => overlay.remove()} closedby="any">
+					<label for="module_add_name">Module Name:</label>{name}<br />
+					<label for="module_add_desc">Module Description:</label>{desc}<br />
+					<button onclick={() => {
+						if (!name.value) {
+							alert("Name cannot be empty")
 
-				if (!name) {
-					alert("Name required");
+							return;
+						}
 
-					return;
-				}
+						setModule(name.value, desc.value)
+						.then(() => {
+							overlay.close();
+							goto("/modules/"+name.value);
+						})
+						.catch(e => alert("Failed to create environment: " + e.message))
+					}}>Create Module</button>
+					<button commandfor="module_add" command="close">Cancel</button>
+				      </dialog>;
 
-				setModule(name, description ?? "")
-				.then(() => goto("/modules/"+name))
-				.catch(e => alert("Failed to create environment: " + e.message))
+				this.parentNode!.append(overlay);
+				overlay.showModal();
 			}}><Add title="Add Module" /></button>
 			{this.#moduleList.toDOM(<ul />, m => {
 				return <li>
