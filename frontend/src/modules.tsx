@@ -63,13 +63,21 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 				return <li>
 					<a href={"/modules/"+m.Name}>{m.Name}</a>
 					<button onclick={() => {
-						if (!confirm("Are you sure you wish to delete module: " + m.Name)) {
-							return;
-						}
+						const overlay = <dialog id="module_remove" onclose={() => overlay.remove()} closedby="any">
+							<div>Are you sure you wish to remove module {m.Name}</div>
+							<button onclick={() => {
+								deleteModule(m.Name)
+								.then(() => {
+									overlay.close();
+									modules().then(this.#moduleList);
+								})
+								.catch(e => alert("Failed to delete environment: " + e.message));
+							}}>Remove</button>
+							<button commandfor="module_remove" command="close">Cancel</button>
+						      </dialog>
 
-						deleteModule(m.Name)
-						.then(() => modules().then(this.#moduleList))
-						.catch(e => alert("Failed to delete environment: " + e.message));
+						this.parentNode!.append(overlay);
+						overlay.showModal();
 					}}><Remove title="Remove Module" /></button>
 				</li>
 			})}
