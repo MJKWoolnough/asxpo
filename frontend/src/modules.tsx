@@ -3,6 +3,7 @@ import CSS from "@css";
 import {amendNode, bindCustomElement} from "@dom";
 import {goto} from "@router";
 import {deleteModule, modules, setModule} from "./endpoints.js";
+import Shadow from "./shadow.js";
 import {Add, Remove} from "./symbols.js";
 
 const css = [new CSS().add({
@@ -32,7 +33,7 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 	constructor() {
 		super();
 
-		amendNode(this.attachShadow({"mode": "open"}), <>
+		<Shadow this={this} mode="open" css={css}>
 			<button onclick={function (this: HTMLButtonElement) {
 				const name = <input id="module_add_name" type="text" />,
 				      desc = <textarea id="module_add_desc" />,
@@ -81,7 +82,7 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 					}}><Remove title="Remove Module" /></button>
 				</li>
 			})}
-		</>).adoptedStyleSheets = css;
+		</Shadow>
 	}
 
 	connectedCallback() {

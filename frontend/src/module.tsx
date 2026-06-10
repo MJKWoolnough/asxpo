@@ -1,6 +1,7 @@
 import bind from "@bind";
-import {amendNode, bindCustomElement} from "@dom";
+import {bindCustomElement} from "@dom";
 import {getModule} from "./endpoints.js";
+import Shadow from "./shadow.js";
 
 const id = Object.freeze(["id"]);
 
@@ -11,10 +12,10 @@ export default bindCustomElement("aspxo-module", class Module extends HTMLElemen
 	constructor() {
 		super();
 		
-		amendNode(this.attachShadow({"mode": "open"}), <>
+		<Shadow this={this} mode="open">
 			  <h2>{this.#name}</h2>
 			  <div>{this.#description}</div>
-		</>)
+		</Shadow>
 	}
 
 	static get observedAttributes() {
