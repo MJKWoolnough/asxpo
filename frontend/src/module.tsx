@@ -1,5 +1,6 @@
 import bind from "@bind";
 import {bindCustomElement} from "@dom";
+import {goto} from "@router";
 import {getModule} from "./endpoints.js";
 import Shadow from "./shadow.js";
 
@@ -32,6 +33,9 @@ export default bindCustomElement("aspxo-module", class Module extends HTMLElemen
 			this.#name(newValue);
 			this.#description(desc);
 		})
-		.catch(e => alert(e.message));
+		.catch(e => {
+			alert(e.message);
+			goto("/");
+		});
 	}
 }, )
