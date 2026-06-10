@@ -1,6 +1,6 @@
 import bind from "@bind";
 import CSS from "@css";
-import {amendNode, bindCustomElement} from "@dom";
+import {bindCustomElement} from "@dom";
 import {goto} from "@router";
 import {deleteModule, modules, setModule} from "./endpoints.js";
 import Shadow from "./shadow.js";
@@ -60,28 +60,26 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 				this.parentNode!.append(overlay);
 				overlay.showModal();
 			}}><Add title="Add Module" /></button>
-			{this.#moduleList.toDOM(<ul />, m => {
-				return <li>
-					<a href={"/modules/"+m.Name}>{m.Name}</a>
-					<button onclick={() => {
-						const overlay = <dialog id="module_remove" onclose={() => overlay.remove()} closedby="any">
-							<div>Are you sure you wish to remove module {m.Name}</div>
-							<button onclick={() => {
-								deleteModule(m.Name)
-								.then(() => {
-									overlay.close();
-									modules().then(this.#moduleList);
-								})
-								.catch(e => alert("Failed to delete environment: " + e.message));
-							}}>Remove</button>
-							<button commandfor="module_remove" command="close">Cancel</button>
-						      </dialog>
+			{this.#moduleList.toDOM(<ul />, m => <li>
+				<a href={"/modules/"+m.Name}>{m.Name}</a>
+				<button onclick={() => {
+					const overlay = <dialog id="module_remove" onclose={() => overlay.remove()} closedby="any">
+						<div>Are you sure you wish to remove module {m.Name}</div>
+						<button onclick={() => {
+							deleteModule(m.Name)
+							.then(() => {
+								overlay.close();
+								modules().then(this.#moduleList);
+							})
+							.catch(e => alert("Failed to delete environment: " + e.message));
+						}}>Remove</button>
+						<button commandfor="module_remove" command="close">Cancel</button>
+					      </dialog>
 
-						this.parentNode!.append(overlay);
-						overlay.showModal();
-					}}><Remove title="Remove Module" /></button>
-				</li>
-			})}
+					this.parentNode!.append(overlay);
+					overlay.showModal();
+				}}><Remove title="Remove Module" /></button>
+			</li>)}
 		</Shadow>
 	}
 
