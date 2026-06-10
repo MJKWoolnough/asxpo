@@ -27,6 +27,10 @@ func run() error {
 	b := backend.New(base)
 
 	http.Handle("/", frontend.Index)
+	http.Handle("/modules/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		r.URL.Path = "/"
+		frontend.Index.ServeHTTP(w, r)
+	}))
 	http.Handle("/api/", http.StripPrefix("/api", b))
 
 	return http.ListenAndServe(":8080", nil)
