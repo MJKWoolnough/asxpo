@@ -14,7 +14,7 @@ ready.then(() => {
 		{
 			router()
 			.add("/modules/:id", Module)
-			.add("", Modules)
+			.add("/", Modules)
 		}
 	</>)
 });
