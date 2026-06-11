@@ -1,10 +1,23 @@
 import bind from "@bind";
+import CSS from "@css";
 import {bindCustomElement} from "@dom";
 import {goto} from "@router";
-import {getModule} from "./endpoints.js";
+import {getModule, setModule} from "./endpoints.js";
 import Shadow from "./shadow.js";
+import {Edit} from "./symbols.js";
 
-const id = Object.freeze(["id"]);
+const id = Object.freeze(["id"]),
+      css = [new CSS().add({
+	"button:has(>svg)": {
+		"border": 0,
+		"background": "none",
+		"cursor": "pointer",
+
+		">svg": {
+			"width": "1em"
+		}
+	},
+})];
 
 export default bindCustomElement("aspxo-module", class Module extends HTMLElement {
 	#name = bind("");
@@ -13,9 +26,26 @@ export default bindCustomElement("aspxo-module", class Module extends HTMLElemen
 	constructor() {
 		super();
 		
-		<Shadow this={this} mode="open">
+		<Shadow this={this} mode="open" css={css}>
 			  <h2>{this.#name}</h2>
-			  <div>{this.#description}</div>
+			  <div>{this.#description}<button onclick={() => {
+				  const desc = <textarea id="module_description" value={this.#description()} />,
+					overlay = <dialog onclose={() => overlay.remove()} closedby="any">
+						<label for="module_description">Description:</label>{desc}<br />
+						<button onclick={() => {
+							setModule(this.#name(), desc.value)
+							.then(() => {
+								this.#description(desc.value);
+								overlay.close();
+							})
+							.catch(e => alert("Failed to update description: " + e.message));
+						}}>Update</button>
+						<button commandfor="module_add" command="close">Cancel</button>
+				        </dialog>;
+
+				this.parentNode!.append(overlay);
+				overlay.showModal();
+			  }}><Edit title="Edit Description"/></button></div>
 		</Shadow>
 	}
 
