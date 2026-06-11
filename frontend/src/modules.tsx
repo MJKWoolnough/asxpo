@@ -38,6 +38,7 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 				const name = <input id="module_add_name" type="text" required />,
 				      desc = <textarea id="module_add_desc" />,
 				      fs = <fieldset>
+					<legend>Add Module</legend>
 					<label for="module_add_name">Module Name:</label>{name}<br />
 					<label for="module_add_desc">Module Description:</label>{desc}<br />
 					<button type="submit">Create Module</button>
