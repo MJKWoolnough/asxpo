@@ -28,7 +28,7 @@ export default bindCustomElement("aspxo-module", class Module extends HTMLElemen
 		
 		<Shadow this={this} mode="open" css={css}>
 			  <h2>{this.#name}</h2>
-			  <div>{this.#description}<button onclick={() => {
+			  <pre>{this.#description}<button onclick={() => {
 				  const desc = <textarea id="module_description" value={this.#description()} />,
 					overlay = <dialog onclose={() => overlay.remove()} closedby="any">
 						<label for="module_description">Description:</label>{desc}<br />
@@ -45,7 +45,7 @@ export default bindCustomElement("aspxo-module", class Module extends HTMLElemen
 
 				this.parentNode!.append(overlay);
 				overlay.showModal();
-			  }}><Edit title="Edit Description"/></button></div>
+			  }}><Edit title="Edit Description"/></button></pre>
 		</Shadow>
 	}
 
