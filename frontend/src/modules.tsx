@@ -5,7 +5,6 @@ import {goto} from "@router";
 import {deleteModule, modules, setModule} from "./endpoints.js";
 import Shadow from "./shadow.js";
 import {Add, Remove} from "./symbols.js";
-import {toggleForm} from "./utils.js";
 
 const css = [new CSS().add({
 	"ul": {
@@ -36,19 +35,19 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 
 		<Shadow this={this} mode="open" css={css}>
 			<button onclick={function (this: HTMLButtonElement) {
-				const name = <input id="module_add_name" type="text" />,
+				const name = <input id="module_add_name" type="text" required />,
 				      desc = <textarea id="module_add_desc" />,
-				      overlay = <dialog id="module_add" onclose={() => overlay.remove()} closedby="any">
+				      fs = <fieldset>
 					<label for="module_add_name">Module Name:</label>{name}<br />
 					<label for="module_add_desc">Module Description:</label>{desc}<br />
-					<button onclick={() => {
-						if (!name.value) {
-							alert("Name cannot be empty")
+					<button type="submit">Create Module</button>
+					<button type="button" commandfor="module_add" command="close">Cancel</button>
+				      </fieldset> as HTMLFieldSetElement,
+				      overlay = <dialog id="module_add" onclose={() => overlay.remove()} closedby="any">
+				      	<form onsubmit={(e: Event) => {
+						e.preventDefault();
 
-							return;
-						}
-
-						toggleForm(overlay, false);
+						fs.disabled = true;
 
 						setModule(name.value, desc.value)
 						.then(() => {
@@ -57,10 +56,9 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 						})
 						.catch(e => {
 							alert("Failed to create environment: " + e.message);
-							toggleForm(overlay, true);
-						})
-					}}>Create Module</button>
-					<button commandfor="module_add" command="close">Cancel</button>
+							fs.disabled = false;
+						});
+					}}>{fs}</form>
 				      </dialog>;
 
 				this.parentNode!.append(overlay);
