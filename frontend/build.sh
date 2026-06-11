@@ -1,6 +1,6 @@
 #!/bin/bash
 
-jspacker -o index.html -H src/index.html -b src/ -i /index.html -P -x "$(grep '`' index_dev.go | cut -d'`' -f2)" -n -M '["terser", "-m", "--module", "--compress", "pure_getters,passes=3", "--ecma", "2020"]';
+jspacker -o index.html -H src/index.html -b src/ -i /index.html -P -x "$(grep '`' index_dev.go | cut -d'`' -f2)" -n -M '["terser", "-m", "--module", "--compress", "pure_getters,passes=3", "--ecma", "2020", "--comments", "false"]';
 
 declare size="$(stat -c %s index.html)";
 
