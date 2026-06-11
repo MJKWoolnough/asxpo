@@ -1,6 +1,6 @@
 import bind from "@bind";
 import CSS from "@css";
-import {bindCustomElement} from "@dom";
+import {amendNode, bindCustomElement} from "@dom";
 import {goto} from "@router";
 import {getModule, setModule} from "./endpoints.js";
 import Shadow from "./shadow.js";
@@ -29,19 +29,30 @@ export default bindCustomElement("aspxo-module", class Module extends HTMLElemen
 		<Shadow this={this} mode="open" css={css}>
 			  <h2>{this.#name}</h2>
 			  <pre>{this.#description}<button onclick={() => {
-				  const desc = <textarea id="module_description" value={this.#description()} />,
-					overlay = <dialog onclose={() => overlay.remove()} closedby="any">
-						<label for="module_description">Description:</label>{desc}<br />
-						<button onclick={() => {
-							setModule(this.#name(), desc.value)
-							.then(() => {
-								this.#description(desc.value);
-								overlay.close();
-							})
-							.catch(e => alert("Failed to update description: " + e.message));
-						}}>Update</button>
-						<button commandfor="module_add" command="close">Cancel</button>
-				        </dialog>;
+				const desc = <textarea id="module_description" value={this.#description()} />,
+				      fs = <fieldset>
+					<legend>Edit Desctription</legend>
+					<label for="module_description">Description:</label>{desc}<br />
+					<button type="submit">Update</button>
+					<button type="button" commandfor="module_desc" command="close">Cancel</button>
+				      </fieldset> as HTMLFieldSetElement,
+				      overlay = <dialog id="module_desc" onclose={() => overlay.remove()} closedby="any">
+					<form onsubmit={(e: Event) => {
+						e.preventDefault();
+
+						fs.disabled = true;
+
+						setModule(this.#name(), desc.value)
+						.then(() => {
+							this.#description(desc.value);
+							overlay.close();
+						})
+						.catch(e => {
+							alert("Failed to update description: " + e.message);
+							fs.disabled = false;
+						});
+					}}>{fs}</form>
+				      </dialog>;
 
 				this.parentNode!.append(overlay);
 				overlay.showModal();
