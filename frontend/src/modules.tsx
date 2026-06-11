@@ -5,6 +5,7 @@ import {goto} from "@router";
 import {deleteModule, modules, setModule} from "./endpoints.js";
 import Shadow from "./shadow.js";
 import {Add, Remove} from "./symbols.js";
+import {toggleForm} from "./utils.js";
 
 const css = [new CSS().add({
 	"ul": {
@@ -47,12 +48,17 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 							return;
 						}
 
+						toggleForm(overlay, false);
+
 						setModule(name.value, desc.value)
 						.then(() => {
 							overlay.close();
 							goto("/modules/"+name.value);
 						})
-						.catch(e => alert("Failed to create environment: " + e.message))
+						.catch(e => {
+							alert("Failed to create environment: " + e.message);
+							toggleForm(overlay, true);
+						})
 					}}>Create Module</button>
 					<button commandfor="module_add" command="close">Cancel</button>
 				      </dialog>;
