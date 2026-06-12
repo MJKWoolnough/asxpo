@@ -35,7 +35,7 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 
 		<Shadow this={this} mode="open" css={css}>
 			<button onclick={() => {
-				const name = <input id="module_add_name" type="text" required />,
+				const name = <input id="module_add_name" type="text" required pattern="^[^\/]+$" title="Cannot contain slashes" />,
 				      desc = <textarea id="module_add_desc" />,
 				      fs = <fieldset>
 					<legend>Add Module</legend>
@@ -45,7 +45,11 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 					<button type="button" commandfor="module_add" command="close">Cancel</button>
 				      </fieldset> as HTMLFieldSetElement,
 				      overlay = <dialog id="module_add" onclose={() => overlay.remove()} closedby="any">
-				      	<form onsubmit={(e: Event) => {
+				      	<form method="dialog" onsubmit={function(this: HTMLFormElement, e: Event) {
+						if (!this.reportValidity() || name.value.includes("/")) {
+							return;
+						}
+
 						e.preventDefault();
 
 						fs.disabled = true;

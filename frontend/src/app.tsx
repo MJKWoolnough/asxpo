@@ -5,7 +5,11 @@ import {router} from "@router";
 import Module from "./module.js";
 import Modules from "./modules.js";
 
-add({});
+add({
+	"input:not(:empty):invalid": {
+		"border-color": "#f00"
+	}
+});
 
 ready.then(() => {
 	amendNode(document.head, render());
