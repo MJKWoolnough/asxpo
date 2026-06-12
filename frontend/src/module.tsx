@@ -35,7 +35,6 @@ export default bindCustomElement("aspxo-module", class Module extends HTMLElemen
 
 	constructor() {
 		super();
-		console.log(css);
 		
 		<Shadow this={this} mode="open" css={css}>
 			  <h2>{this.#name}</h2>
