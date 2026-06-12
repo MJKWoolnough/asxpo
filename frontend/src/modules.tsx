@@ -58,6 +58,7 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 						})
 						.catch(e => {
 							alert("Failed to create environment: " + e.message);
+
 							fs.disabled = false;
 						});
 					}}>{fs}</form>
@@ -69,17 +70,31 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 			{this.#moduleList.toDOM(<ul />, m => <li>
 				<a href={"/modules/"+m.Name}>{m.Name}</a>
 				<button onclick={() => {
-					const overlay = <dialog id="module_remove" onclose={() => overlay.remove()} closedby="any">
+					const fs = <fieldset>
+						<legend>Remove Module</legend>
 						<div>Are you sure you wish to remove module: {m.Name}</div>
-						<button onclick={() => {
+						<div>
+							<button type="submit">Remove</button>
+							<button type="button" commandfor="module_remove" command="close">Cancel</button>
+						</div>
+					      </fieldset>,
+					      overlay = <dialog id="module_remove" onclose={() => overlay.remove()} closedby="any">
+					      	<form method="dialog" onsubmit={(e: Event) => {
+							e.preventDefault();
+
+							fs.disabled = true;
+
 							deleteModule(m.Name)
 							.then(() => {
 								overlay.close();
 								modules().then(this.#moduleList);
 							})
-							.catch(e => alert("Failed to delete environment: " + e.message));
-						}}>Remove</button>
-						<button commandfor="module_remove" command="close">Cancel</button>
+							.catch(e => {
+								alert("Failed to delete environment: " + e.message);
+
+								fs.disabled = false;
+							});
+						}}>{fs}</form>
 					      </dialog>
 
 					document.body.append(overlay);
