@@ -54,7 +54,7 @@ export default bindCustomElement("aspxo-module", class Module extends HTMLElemen
 					}}>{fs}</form>
 				      </dialog>;
 
-				this.parentNode!.append(overlay);
+				document.body.append(overlay);
 				overlay.showModal();
 			  }}><Edit title="Edit Description"/></button></pre>
 		</Shadow>

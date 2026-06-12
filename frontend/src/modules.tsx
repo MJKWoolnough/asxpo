@@ -34,7 +34,7 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 		super();
 
 		<Shadow this={this} mode="open" css={css}>
-			<button onclick={function (this: HTMLButtonElement) {
+			<button onclick={() => {
 				const name = <input id="module_add_name" type="text" required />,
 				      desc = <textarea id="module_add_desc" />,
 				      fs = <fieldset>
@@ -62,7 +62,7 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 					}}>{fs}</form>
 				      </dialog>;
 
-				this.parentNode!.append(overlay);
+				document.body.append(overlay);
 				overlay.showModal();
 			}}><Add title="Add Module" /></button>
 			{this.#moduleList.toDOM(<ul />, m => <li>
@@ -81,7 +81,7 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 						<button commandfor="module_remove" command="close">Cancel</button>
 					      </dialog>
 
-					this.parentNode!.append(overlay);
+					document.body.append(overlay);
 					overlay.showModal();
 				}}><Remove title="Remove Module" /></button>
 			</li>)}
