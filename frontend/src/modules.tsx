@@ -19,11 +19,6 @@ const css = [new CSS().add({
 		">svg": {
 			"width": "1em"
 		}
-	},
-	"label": {
-		"display": "inline-block",
-		"width": "9em",
-		"text-align": "right"
 	}
 })];
 
@@ -39,10 +34,12 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 				      desc = <textarea id="module_add_desc" />,
 				      fs = <fieldset>
 					<legend>Add Module</legend>
-					<label for="module_add_name">Module Name:</label>{name}<br />
-					<label for="module_add_desc">Module Description:</label>{desc}<br />
-					<button type="submit">Create Module</button>
-					<button type="button" commandfor="module_add" command="close">Cancel</button>
+					<label for="module_add_name">Module Name:</label>{name}
+					<label for="module_add_desc">Module Description:</label>{desc}
+					<div>
+						<button type="submit">Create Module</button>
+						<button type="button" commandfor="module_add" command="close">Cancel</button>
+					</div>
 				      </fieldset> as HTMLFieldSetElement,
 				      overlay = <dialog id="module_add" onclose={() => overlay.remove()} closedby="any">
 				      	<form method="dialog" onsubmit={function(this: HTMLFormElement, e: Event) {

@@ -44,9 +44,11 @@ export default bindCustomElement("aspxo-module", class Module extends HTMLElemen
 				const desc = <textarea id="module_description" value={this.#description()} />,
 				      fs = <fieldset>
 					<legend>Edit Description</legend>
-					<label for="module_description">Description:</label>{desc}<br />
-					<button type="submit">Update</button>
-					<button type="button" commandfor="module_desc" command="close">Cancel</button>
+					<label for="module_description">Description:</label>{desc}
+					<div>
+						<button type="submit">Update</button>
+						<button type="button" commandfor="module_desc" command="close">Cancel</button>
+					</div>
 				      </fieldset> as HTMLFieldSetElement,
 				      overlay = <dialog id="module_desc" onclose={() => overlay.remove()} closedby="any">
 					<form onsubmit={(e: Event) => {

@@ -6,8 +6,29 @@ import Module from "./module.js";
 import Modules from "./modules.js";
 
 add({
-	"input:not(:empty):invalid": {
-		"border-color": "#f00"
+	"dialog fieldset": {
+		"display": "grid",
+		"grid-template-columns": "max-content 1fr",
+		"align-items": "center",
+
+		">label": {
+			"text-align": "right",
+			"grid-column": 1
+		},
+
+		">input,>textarea,>select": {
+			"grid-column": 2,
+			"width": "100%"
+		},
+
+		"input:not(:empty):invalid": {
+			"border-color": "#f00"
+		},
+
+		">div": {
+			"margin-top": "1em",
+			"grid-column": "1/3"
+		}
 	}
 });
 
