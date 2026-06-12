@@ -30,7 +30,7 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 
 		<Shadow this={this} mode="open" css={css}>
 			<button onclick={() => {
-				const name = <input id="module_add_name" type="text" required pattern="^[^\/]+$" title="Cannot contain slashes" />,
+				const name = <input id="module_add_name" type="text" required pattern="^[^\/]+$" title="Cannot contain slashes" placeholder=" " />,
 				      desc = <textarea id="module_add_desc" />,
 				      fs = <fieldset>
 					<legend>Add Module</legend>
@@ -70,7 +70,7 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 				<a href={"/modules/"+m.Name}>{m.Name}</a>
 				<button onclick={() => {
 					const overlay = <dialog id="module_remove" onclose={() => overlay.remove()} closedby="any">
-						<div>Are you sure you wish to remove module {m.Name}</div>
+						<div>Are you sure you wish to remove module: {m.Name}</div>
 						<button onclick={() => {
 							deleteModule(m.Name)
 							.then(() => {
