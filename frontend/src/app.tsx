@@ -6,30 +6,62 @@ import Module from "./module.js";
 import Modules from "./modules.js";
 
 add({
-	"dialog fieldset": {
-		"display": "grid",
-		"grid-template-columns": "max-content 1fr",
-		"align-items": "center",
+	"dialog": {
+		"border": "none",
+		"background-color": "transparent",
+		"pointer-events": "none",
 
-		">label": {
-			"text-align": "right",
-			"grid-column": 1
-		},
+		" fieldset": {
+			"pointer-events": "auto",
+			"display": "grid",
+			"grid-template-columns": "max-content 1fr",
+			"align-items": "center",
+			"background-color": "#fff",
 
-		">input,>textarea,>select": {
-			"grid-column": 2,
-			"width": "100%"
-		},
+			">label": {
+				"text-align": "right",
+				"grid-column": 1
+			},
 
-		">input:user-invalid": {
-			"border-color": "#f00"
-		},
+			">input,>textarea,>select": {
+				"grid-column": 2,
+				"width": "100%"
+			},
 
-		">div": {
-			"margin-top": "1em",
-			"grid-column": "1/3"
+			">input:user-invalid": {
+				"border-color": "#f00"
+			},
+
+			">div": {
+				"margin-top": "1em",
+				"grid-column": "1/3"
+			},
+
+			">legend": {
+				"border": "2px groove threedface",
+				"background-color": "#fff"
+			},
+
+			":disabled,:disabled>legend": {
+				"border-style": "solid",
+				"animation": "borderPulse 1s infinite"
+			}
 		}
 	}
+})
+.at("@keyframes borderPulse", {
+	"0%": {
+		"border-color": "threedface",
+    		"box-shadow": "0 0 5px rgba(0, 0, 0, 0.8)"
+	},
+	"50%": {
+		"border-color": "#000",
+    		"box-shadow": "0 0 0px rgba(0, 0, 0, 0.2)"
+	},
+	"100%": {
+		"border-color": "threedface",
+    		"box-shadow": "0 0 5px rgba(0, 0, 0, 0.8)"
+	},
 });
 
 ready.then(() => {
