@@ -1,6 +1,6 @@
 import bind from "@bind";
 import CSS from "@css";
-import {amendNode, bindCustomElement} from "@dom";
+import {bindCustomElement} from "@dom";
 import {goto} from "@router";
 import {getModule, setModule} from "./endpoints.js";
 import Shadow from "./shadow.js";
@@ -17,6 +17,16 @@ const id = Object.freeze(["id"]),
 			"width": "1em"
 		}
 	},
+	"pre": {
+		"margin-top": 0,
+		"float": "left",
+
+		":empty::before": {
+			"display": "block",
+			"content": `"No Description"`,
+			"font-style": "italic"
+		}
+	}
 })];
 
 export default bindCustomElement("aspxo-module", class Module extends HTMLElement {
@@ -25,10 +35,12 @@ export default bindCustomElement("aspxo-module", class Module extends HTMLElemen
 
 	constructor() {
 		super();
+		console.log(css);
 		
 		<Shadow this={this} mode="open" css={css}>
 			  <h2>{this.#name}</h2>
-			  <pre>{this.#description}<button onclick={() => {
+			  <pre>{this.#description}</pre>
+			  <button onclick={() => {
 				const desc = <textarea id="module_description" value={this.#description()} />,
 				      fs = <fieldset>
 					<legend>Edit Description</legend>
@@ -56,7 +68,7 @@ export default bindCustomElement("aspxo-module", class Module extends HTMLElemen
 
 				document.body.append(overlay);
 				overlay.showModal();
-			  }}><Edit title="Edit Description"/></button></pre>
+			  }}><Edit title="Edit Description"/></button>
 		</Shadow>
 	}
 
@@ -79,4 +91,4 @@ export default bindCustomElement("aspxo-module", class Module extends HTMLElemen
 			goto("/");
 		});
 	}
-}, )
+})
