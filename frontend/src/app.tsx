@@ -21,7 +21,7 @@ add({
 			"width": "100%"
 		},
 
-		"input:not(:empty):invalid": {
+		">input:user-invalid": {
 			"border-color": "#f00"
 		},
 
