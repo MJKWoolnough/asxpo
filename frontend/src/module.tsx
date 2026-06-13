@@ -1,11 +1,11 @@
-import {Field} from "./endpoints.js";
+import type {Field} from "./endpoints.js";
 import bind from "@bind";
 import CSS from "@css";
 import {bindCustomElement} from "@dom";
 import {goto} from "@router";
 import {getModule, setModule, setType} from "./endpoints.js";
 import Shadow from "./shadow.js";
-import {Add, Edit} from "./symbols.js";
+import {Add, Edit, Remove} from "./symbols.js";
 
 const id = Object.freeze(["id"]),
       css = [new CSS().add({
@@ -28,7 +28,42 @@ const id = Object.freeze(["id"]),
 			"font-style": "italic"
 		}
 	}
-})];
+})],
+      Fields = ({fields, types}: {"fields": Field[], "types": string[]}) => {
+	const adder = <li><button type="button" onclick={() => {
+		const field = {"Name": "", "Type": "", "Description": ""};
+
+		fields.push(field);
+
+		adder.before(<li>
+			<input type="text" onchange={function(this: HTMLInputElement) {field.Name = this.value}} placeholder="Name" required />
+			<input type="text" onchange={function(this: HTMLInputElement) {field.Type = this.value}} placeholder="Type" required list="types" />
+			<input type="text" onchange={function(this: HTMLInputElement) {field.Type = this.value}} placeholder="Description" />
+			<button type="button" onclick={function(this: HTMLButtonElement) {
+				const index = fields.indexOf(field);
+
+				if (index >= 0) {
+					fields.splice(index, 1);
+				}
+
+				this.parentElement?.remove();
+			}}><Remove title="Remove Field" /></button>
+		</li>);
+	}}>+</button></li> as HTMLLIElement;
+
+	return <>
+		<ul>
+			{adder}
+		</ul>
+		<datalist id="types">
+			{types.map(t => <option>{t}</option>)}
+		</datalist>
+	</>;
+      },
+      types: string[] = [
+	      "string",
+	      "int"
+      ];
 
 export default bindCustomElement("aspxo-module", class Module extends HTMLElement {
 	#name = bind("");
@@ -82,6 +117,8 @@ export default bindCustomElement("aspxo-module", class Module extends HTMLElemen
 					<legend>Add Type</legend>
 					<label for="type_name">Name:</label>{name}
 					<label for="type_description">Description:</label>{desc}
+					<label>Fields:</label>
+					<Fields fields={fields} types={types} />
 					<div>
 						<button type="submit">Update</button>
 						<button type="button" commandfor="type_add" command="close">Cancel</button>
