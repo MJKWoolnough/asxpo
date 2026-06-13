@@ -20,7 +20,12 @@ add({
 
 			">label": {
 				"text-align": "right",
-				"grid-column": 1
+				"grid-column": 1,
+
+				":after": {
+					"content": `":"`,
+					"margin-right": "0.5em"
+				}
 			},
 
 			">input,>textarea,>select": {
