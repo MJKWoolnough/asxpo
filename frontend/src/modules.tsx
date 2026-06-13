@@ -90,7 +90,7 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 								modules().then(this.#moduleList);
 							})
 							.catch(e => {
-								alert("Failed to delete environment: " + e.message);
+								alert("Failed to delete module: " + e.message);
 
 								fs.disabled = false;
 							});
