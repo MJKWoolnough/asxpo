@@ -47,6 +47,19 @@ add({
 				"animation": "borderPulse 1s infinite"
 			}
 		}
+	},
+	"button:has(svg)": {
+		"border": 0,
+		"background": "none",
+		"cursor": "pointer",
+
+		">svg": {
+			"width": "1em"
+		}
+	},
+	"ul": {
+		"padding": 0,
+		"list-style": "none"
 	}
 })
 .at("@keyframes borderPulse", {
