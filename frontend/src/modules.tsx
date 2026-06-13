@@ -3,6 +3,7 @@ import CSS from "@css";
 import {bindCustomElement} from "@dom";
 import {goto} from "@router";
 import {deleteModule, modules, setModule} from "./endpoints.js";
+import Form from "./form.js";
 import Shadow from "./shadow.js";
 import {Add, Remove} from "./symbols.js";
 
@@ -30,42 +31,12 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 
 		<Shadow this={this} mode="open" css={css}>
 			<button onclick={() => {
-				const name = <input id="module_add_name" type="text" required pattern="^[^\/]+$" title="Cannot contain slashes" placeholder=" " />,
-				      desc = <textarea id="module_add_desc" />,
-				      fs = <fieldset>
-					<legend>Add Module</legend>
-					<label for="module_add_name">Module Name:</label>{name}
-					<label for="module_add_desc">Module Description:</label>{desc}
-					<div>
-						<button type="submit">Create Module</button>
-						<button type="button" commandfor="module_add" command="close">Cancel</button>
-					</div>
-				      </fieldset> as HTMLFieldSetElement,
-				      overlay = <dialog id="module_add" onclose={() => overlay.remove()} closedby="any">
-				      	<form method="dialog" onsubmit={function(this: HTMLFormElement, e: Event) {
-						if (!this.reportValidity() || name.value.includes("/")) {
-							return;
-						}
+				const name = <input label="Module Name" type="text" required pattern="^[^\/]+$" title="Cannot contain slashes" placeholder=" " />;
 
-						e.preventDefault();
-
-						fs.disabled = true;
-
-						setModule(name.value, desc.value)
-						.then(() => {
-							overlay.close();
-							goto("/modules/"+name.value);
-						})
-						.catch(e => {
-							alert("Failed to create environment: " + e.message);
-
-							fs.disabled = false;
-						});
-					}}>{fs}</form>
-				      </dialog>;
-
-				document.body.append(overlay);
-				overlay.showModal();
+				<Form legend="Add Module" submit="Create Module" onsubmit={setModule} onsuccess={() => goto("/modules/"+name.value)}>
+					{name}
+					<textarea label="Module Description" />
+				</Form>
 			}}><Add title="Add Module" /></button>
 			{this.#moduleList.toDOM(<ul />, m => <li>
 				<a href={"/modules/"+m.Name}>{m.Name}</a>
