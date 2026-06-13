@@ -1,10 +1,11 @@
+import {Field} from "./endpoints.js";
 import bind from "@bind";
 import CSS from "@css";
 import {bindCustomElement} from "@dom";
 import {goto} from "@router";
-import {getModule, setModule} from "./endpoints.js";
+import {getModule, setModule, setType} from "./endpoints.js";
 import Shadow from "./shadow.js";
-import {Edit} from "./symbols.js";
+import {Add, Edit} from "./symbols.js";
 
 const id = Object.freeze(["id"]),
       css = [new CSS().add({
@@ -63,6 +64,7 @@ export default bindCustomElement("aspxo-module", class Module extends HTMLElemen
 							})
 							.catch(e => {
 								alert("Failed to update description: " + e.message);
+
 								fs.disabled = false;
 							});
 						}}>{fs}</form>
@@ -72,6 +74,38 @@ export default bindCustomElement("aspxo-module", class Module extends HTMLElemen
 					overlay.showModal();
 				}}><Edit title="Edit Description"/></button>
 			</div>
+			<button onclick={() => {
+				const name = <input id="type_name" required pattern="^[^\/]+$" title="Cannot contain slashes" placeholder=" " />,
+				      desc = <textarea id="type_description" />,
+				      fields: Field[] = [],
+				      fs = <fieldset>
+					<legend>Add Type</legend>
+					<label for="type_name">Name:</label>{name}
+					<label for="type_description">Description:</label>{desc}
+					<div>
+						<button type="submit">Update</button>
+						<button type="button" commandfor="type_add" command="close">Cancel</button>
+					</div>
+				      </fieldset> as HTMLFieldSetElement,
+				      overlay = <dialog id="type_add" onclose={() => overlay.remove()} closedby="any">
+					<form onsubmit={(e: Event) => {
+						e.preventDefault();
+
+						fs.disabled = true;
+
+						setType(this.#name(), name.value, desc.value, fields)
+						.then(() => overlay.close())
+						.catch(e => {
+							alert("Failed to create type: " + e.message);
+
+							fs.disabled = false;
+						});
+					}}>{fs}</form>
+				      </dialog>;
+
+				document.body.append(overlay);
+				overlay.showModal();
+			}}><Add title="Add Type" /></button>
 		</Shadow>
 	}
 
