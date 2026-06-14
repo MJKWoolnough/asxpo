@@ -1,86 +1,9 @@
-import {add, render} from "@css";
+import {render} from "@css";
 import {amendNode} from "@dom";
 import ready from "@load";
 import {router} from "@router";
 import Module from "./module.js";
 import Modules from "./modules.js";
-
-add({
-	"dialog": {
-		"border": "none",
-		"background-color": "transparent",
-		"pointer-events": "none",
-
-		" fieldset": {
-			"pointer-events": "auto",
-			"display": "grid",
-			"grid-template-columns": "max-content 1fr",
-			"align-items": "center",
-			"background-color": "#fff",
-
-			">label": {
-				"text-align": "right",
-				"grid-column": 1,
-
-				":after": {
-					"content": `":"`,
-					"margin-right": "0.5em"
-				}
-			},
-
-			">input,>textarea,>select": {
-				"grid-column": 2,
-				"width": "100%"
-			},
-
-			">input:user-invalid": {
-				"border-color": "#f00"
-			},
-
-			">div": {
-				"margin-top": "1em",
-				"grid-column": "1/3"
-			},
-
-			">legend": {
-				"border": "2px groove threedface",
-				"background-color": "#fff"
-			},
-
-			":disabled,:disabled>legend": {
-				"border-style": "solid",
-				"animation": "borderPulse 1s infinite"
-			}
-		}
-	},
-	"button:has(svg)": {
-		"border": 0,
-		"background": "none",
-		"cursor": "pointer",
-
-		">svg": {
-			"width": "1em"
-		}
-	},
-	"ul": {
-		"padding": 0,
-		"list-style": "none"
-	}
-})
-.at("@keyframes borderPulse", {
-	"0%": {
-		"border-color": "threedface",
-    		"box-shadow": "0 0 5px rgba(0, 0, 0, 0.8)"
-	},
-	"50%": {
-		"border-color": "#000",
-    		"box-shadow": "0 0 0px rgba(0, 0, 0, 0.2)"
-	},
-	"100%": {
-		"border-color": "threedface",
-    		"box-shadow": "0 0 5px rgba(0, 0, 0, 0.8)"
-	},
-});
 
 ready.then(() => {
 	amendNode(document.head, render());
