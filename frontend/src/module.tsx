@@ -30,7 +30,8 @@ const id = Object.freeze(["id"]),
 	}
 })],
       Fields = ({fields, types}: {"fields": Field[], "types": string[]}) => {
-	const adder = <li><button type="button" onclick={() => {
+	const adder = <li>
+		<button type="button" onclick={() => {
 		const field = {"Name": "", "Type": "", "Description": ""};
 
 		fields.push(field);
@@ -49,16 +50,13 @@ const id = Object.freeze(["id"]),
 				this.parentElement?.remove();
 			}}><Remove title="Remove Field" /></button>
 		</li>);
-	}}>+</button></li> as HTMLLIElement;
-
-	return <>
-		<ul>
-			{adder}
-		</ul>
+		}}>+</button>
 		<datalist id="types">
 			{types.map(t => <option>{t}</option>)}
 		</datalist>
-	</>;
+	</li> as HTMLLIElement;
+
+	return <ul>{adder}</ul>;
       },
       types: string[] = [
 	      "string",
