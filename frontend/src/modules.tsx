@@ -41,35 +41,7 @@ export default bindCustomElement("aspxo-modules", class Modules extends HTMLElem
 			{this.#moduleList.toDOM(<ul />, m => <li>
 				<a href={"/modules/"+m.Name}>{m.Name}</a>
 				<button onclick={() => {
-					const fs = <fieldset>
-						<legend>Remove Module</legend>
-						<div>Are you sure you wish to remove module: {m.Name}</div>
-						<div>
-							<button type="submit">Remove</button>
-							<button type="button" commandfor="module_remove" command="close">Cancel</button>
-						</div>
-					      </fieldset>,
-					      overlay = <dialog id="module_remove" onclose={() => overlay.remove()} closedby="any">
-					      	<form method="dialog" onsubmit={(e: Event) => {
-							e.preventDefault();
-
-							fs.disabled = true;
-
-							deleteModule(m.Name)
-							.then(() => {
-								overlay.close();
-								modules().then(this.#moduleList);
-							})
-							.catch(e => {
-								alert("Failed to delete module: " + e.message);
-
-								fs.disabled = false;
-							});
-						}}>{fs}</form>
-					      </dialog>
-
-					document.body.append(overlay);
-					overlay.showModal();
+					<Form legend="Remove Module" preamble={`Are you sure you wish to remove module: ${m.Name}`} submit="Remove" onsubmit={() => deleteModule(m.Name)} onsuccess={() => {modules().then(this.#moduleList)}} />
 				}}><Remove title="Remove Module" /></button>
 			</li>)}
 		</Shadow>
