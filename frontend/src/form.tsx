@@ -78,7 +78,7 @@ add({
 	},
 });
 
-export default ({legend: legendText, preamble, submit, onsubmit, onsuccess}: {legend: string; preamble?: string; submit: string; onsubmit: (...args: string[]) => Promise<any>, onsuccess: (t: any) => void}, elements: (HTMLElement & {"value": string})[] = []) => {
+export default ({legend: legendText, preamble, submit, onsubmit, onsuccess}: {legend: string; preamble?: string; submit: string; onsubmit: (...args: any[]) => Promise<unknown>, onsuccess?: () => void}, elements: (HTMLElement & {"value": unknown})[] = []) => {
 	 const fs = <fieldset>
 	 	<legend>{legendText}</legend>
 		{preamble ? <div>{preamble}</div> : []}
@@ -106,12 +106,13 @@ export default ({legend: legendText, preamble, submit, onsubmit, onsuccess}: {le
 			fs.disabled = true;
 
 			onsubmit.apply(null, elements.map(e => e.value))
-			.then(v => {
-				onsuccess(v);
+			.then(() => {
 				overlay.close();
+				onsuccess && onsuccess();
 			})
 			.catch(e => {
 				alert(`Failed to ${legendText}: ${e.message}`);
+				fs.disabled = false;
 			});
 		}}>
 			{fs}
