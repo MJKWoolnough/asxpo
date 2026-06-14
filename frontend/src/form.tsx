@@ -78,18 +78,16 @@ add({
 	},
 });
 
-export default ({legend: legendText, submit, onsubmit, onsuccess}: {legend: string; submit: string; onsubmit: (...args: string[]) => Promise<any>, onsuccess: (t: any) => void}, elements: (string | HTMLElement & {"value": string})[]) => {
+export default ({legend: legendText, preamble, submit, onsubmit, onsuccess}: {legend: string; preamble?: string; submit: string; onsubmit: (...args: string[]) => Promise<any>, onsuccess: (t: any) => void}, elements: (HTMLElement & {"value": string})[] = []) => {
 	 const fs = <fieldset>
 	 	<legend>{legendText}</legend>
+		{preamble ? <div>{preamble}</div> : []}
 		{elements.map(e => {
-			if (!(e instanceof HTMLElement)) {
-				return [];
-			}
-
 			const lid = id();
 
 			return <>
-				<label for={lid}>{e.getAttribute("label")}</label>{amendNode(e, {"id": lid})}
+				<label for={lid}>{e.getAttribute("label")}</label>
+				{amendNode(e, {"id": lid})}
 			</>
 		})}
 		<div>
@@ -98,12 +96,16 @@ export default ({legend: legendText, submit, onsubmit, onsuccess}: {legend: stri
 		</div>
 	       </fieldset>,
 	       overlay = <dialog id="module_desc" onclose={() => overlay.remove()} closedby="any">
-	 	<form onsubmit={(e: Event) => {
+	 	<form onsubmit={function (this: HTMLFormElement, e: Event) {
+			if (!this.reportValidity()) {
+				return;
+			}
+
 			e.preventDefault()
 
 			fs.disabled = true;
 
-			onsubmit.apply(null, elements.map(e => typeof e === "string" ? e : e.value) as {[K in keyof T]: string} & string[])
+			onsubmit.apply(null, elements.map(e => e.value))
 			.then(v => {
 				onsuccess(v);
 				overlay.close();
