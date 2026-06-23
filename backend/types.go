@@ -2,7 +2,9 @@ package backend
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
+	"io/fs"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -34,7 +36,7 @@ func (b *backend) setType(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	t.Name = r.PathValue("name")
+	t.Name = r.PathValue("type")
 
 	if strings.ContainsAny(t.Name, "/\x00") {
 		return ErrInvalidName
@@ -60,7 +62,7 @@ func (b *backend) setType(w http.ResponseWriter, r *http.Request) error {
 
 func (b *backend) getType(w http.ResponseWriter, r *http.Request) error {
 	moduleName := r.PathValue("module")
-	typeName := r.PathValue("name")
+	typeName := r.PathValue("type")
 
 	f, err := os.Open(filepath.Join(b.path, moduleName, typeName+".typ"))
 	if err != nil {
@@ -75,7 +77,23 @@ func (b *backend) getType(w http.ResponseWriter, r *http.Request) error {
 }
 
 func (b *backend) renameType(w http.ResponseWriter, r *http.Request) error {
-	return nil
+	moduleName := r.PathValue("module")
+	typeName := r.PathValue("type")
+	newName := r.PathValue("name")
+
+	if strings.ContainsAny(newName, "/\x00") {
+		return ErrInvalidName
+	}
+
+	base := filepath.Join(b.path, moduleName)
+	newFile := filepath.Join(base, newName+".typ")
+
+	_, err := os.Stat(newFile)
+	if !errors.Is(err, fs.ErrNotExist) {
+		return err
+	}
+
+	return os.Rename(filepath.Join(base, typeName+".typ"), newFile)
 }
 
 func (b *backend) deleteType(w http.ResponseWriter, r *http.Request) error {
