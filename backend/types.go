@@ -2,6 +2,7 @@ package backend
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -58,7 +59,19 @@ func (b *backend) setType(w http.ResponseWriter, r *http.Request) error {
 }
 
 func (b *backend) getType(w http.ResponseWriter, r *http.Request) error {
-	return nil
+	moduleName := r.PathValue("module")
+	typeName := r.PathValue("name")
+
+	f, err := os.Open(filepath.Join(b.path, moduleName, typeName+".typ"))
+	if err != nil {
+		return err
+	}
+
+	defer f.Close()
+
+	_, err = io.Copy(w, f)
+
+	return err
 }
 
 func (b *backend) renameType(w http.ResponseWriter, r *http.Request) error {
