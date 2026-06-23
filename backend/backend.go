@@ -26,6 +26,11 @@ func New(path string) http.Handler {
 	mux.Handle("POST /modules/{module}/{name}", http.HandlerFunc(b.RenameModule))
 	mux.Handle("DELETE /modules/{module}", http.HandlerFunc(b.DeleteModule))
 
+	mux.Handle("GET /modules/{module}/{type}", http.HandlerFunc(b.GetType))
+	mux.Handle("PUT /modules/{module}/{type}", http.HandlerFunc(b.SetType))
+	mux.Handle("POST /modules/{module}/{type}", http.HandlerFunc(b.RenameType))
+	mux.Handle("DELETE /modules/{module}/{type}", http.HandlerFunc(b.DeleteType))
+
 	return &mux
 }
 
