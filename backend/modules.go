@@ -142,7 +142,7 @@ func (b *backend) deleteModule(w http.ResponseWriter, r *http.Request) error {
 }
 
 var (
-	ErrInvalidName   = errors.New("module names cannot contain slashes or null bytes")
+	ErrInvalidName   = errors.New("names cannot contain slashes or null bytes")
 	ErrDuplicateName = errors.New("name already used")
 	ErrNoModule      = errors.New("no module with that name")
 )
