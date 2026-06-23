@@ -20,24 +20,26 @@ func New(path string) http.Handler {
 
 	var mux http.ServeMux
 
-	mux.Handle("GET /modules", http.HandlerFunc(b.ListModules))
-	mux.Handle("GET /modules/{module}", http.HandlerFunc(b.GetModule))
-	mux.Handle("PUT /modules/{module}", http.HandlerFunc(b.SetModule))
-	mux.Handle("POST /modules/{module}/{name}", http.HandlerFunc(b.RenameModule))
-	mux.Handle("DELETE /modules/{module}", http.HandlerFunc(b.DeleteModule))
+	mux.Handle("GET /modules", handler(b.listModules))
+	mux.Handle("GET /modules/{module}", handler(b.getModule))
+	mux.Handle("PUT /modules/{module}", handler(b.setModule))
+	mux.Handle("POST /modules/{module}/{name}", handler(b.renameModule))
+	mux.Handle("DELETE /modules/{module}", handler(b.deleteModule))
 
-	mux.Handle("GET /modules/{module}/{type}", http.HandlerFunc(b.GetType))
-	mux.Handle("PUT /modules/{module}/{type}", http.HandlerFunc(b.SetType))
-	mux.Handle("POST /modules/{module}/{type}", http.HandlerFunc(b.RenameType))
-	mux.Handle("DELETE /modules/{module}/{type}", http.HandlerFunc(b.DeleteType))
+	mux.Handle("GET /modules/{module}/{type}", handler(b.getType))
+	mux.Handle("PUT /modules/{module}/{type}", handler(b.setType))
+	mux.Handle("POST /modules/{module}/{type}/{name}", handler(b.renameType))
+	mux.Handle("DELETE /modules/{module}/{type}", handler(b.deleteType))
 
 	return &mux
 }
 
-func handle(fn func(http.ResponseWriter, *http.Request) error, w http.ResponseWriter, r *http.Request) {
+type handler func(w http.ResponseWriter, r *http.Request) error
+
+func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	httpbuffer.Handler{
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if err := fn(w, r); err != nil {
+			if err := h(w, r); err != nil {
 				http.Error(w, err.Error(), responseCode(err))
 			}
 		}),

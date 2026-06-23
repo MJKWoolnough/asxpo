@@ -13,10 +13,6 @@ import (
 
 const description = "description"
 
-func (b *backend) SetModule(w http.ResponseWriter, r *http.Request) {
-	handle(b.setModule, w, r)
-}
-
 func (b *backend) setModule(w http.ResponseWriter, r *http.Request) error {
 	name := r.PathValue("module")
 
@@ -54,10 +50,6 @@ func (b *backend) setModule(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (b *backend) ListModules(w http.ResponseWriter, r *http.Request) {
-	handle(b.listModules, w, r)
-}
-
 type module struct {
 	Name        string
 	Description string
@@ -86,10 +78,6 @@ func (b *backend) listModules(w http.ResponseWriter, r *http.Request) error {
 	return json.NewEncoder(w).Encode(modules)
 }
 
-func (b *backend) GetModule(w http.ResponseWriter, r *http.Request) {
-	handle(b.getModule, w, r)
-}
-
 func (b *backend) getModule(w http.ResponseWriter, r *http.Request) error {
 	name := r.PathValue("module")
 	base := filepath.Join(b.path, name)
@@ -108,10 +96,6 @@ func (b *backend) getModule(w http.ResponseWriter, r *http.Request) error {
 	_, err = io.Copy(w, f)
 
 	return err
-}
-
-func (b *backend) RenameModule(w http.ResponseWriter, r *http.Request) {
-	handle(b.renameModule, w, r)
 }
 
 func (b *backend) renameModule(w http.ResponseWriter, r *http.Request) error {
@@ -138,10 +122,6 @@ func (b *backend) renameModule(w http.ResponseWriter, r *http.Request) error {
 	w.WriteHeader(http.StatusCreated)
 
 	return nil
-}
-
-func (b *backend) DeleteModule(w http.ResponseWriter, r *http.Request) {
-	handle(b.deleteModule, w, r)
 }
 
 func (b *backend) deleteModule(w http.ResponseWriter, r *http.Request) error {
