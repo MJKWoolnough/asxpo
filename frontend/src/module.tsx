@@ -102,9 +102,9 @@ export default bindCustomElement("aspxo-module", class Module extends HTMLElemen
 		}
 
 		getModule(newValue)
-		.then(desc => {
+		.then(module => {
 			this.#name(newValue);
-			this.#description(desc);
+			this.#description(module.Description);
 		})
 		.catch(e => {
 			alert(e.message);
