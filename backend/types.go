@@ -3,6 +3,7 @@ package backend
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"io/fs"
 	"net/http"
@@ -97,5 +98,21 @@ func (b *backend) renameType(w http.ResponseWriter, r *http.Request) error {
 }
 
 func (b *backend) deleteType(w http.ResponseWriter, r *http.Request) error {
-	return nil
+	moduleName := r.PathValue("module")
+	typeName := r.PathValue("type")
+
+	if strings.ContainsAny(moduleName, "/\x00") || strings.ContainsAny(typeName, "/\x00") {
+		return ErrInvalidName
+	}
+
+	path := filepath.Join(b.path, moduleName, typeName)
+
+	_, err := os.Stat(path)
+	if os.IsNotExist(err) {
+		return fmt.Errorf("%w: %s", ErrNoType, typeName)
+	}
+
+	return os.RemoveAll(path)
 }
+
+var ErrNoType = fmt.Errorf("no type with that name")
