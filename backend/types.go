@@ -60,6 +60,43 @@ func (b *backend) setType(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
+func (b *backend) readTypes(moduleName string) ([]nameDescription, error) {
+	paths, err := filepath.Glob(filepath.Join(b.path, moduleName, "*.typ"))
+	if err != nil {
+		return nil, err
+	}
+
+	var types []nameDescription
+
+	for _, typ := range paths {
+		t, err := readType(typ)
+		if err != nil {
+			return nil, err
+		}
+
+		types = append(types, t)
+	}
+
+	return types, nil
+}
+
+func readType(typ string) (nameDescription, error) {
+	f, err := os.Open(typ)
+	if err != nil {
+		return nameDescription{}, err
+	}
+
+	defer f.Close()
+
+	var nd nameDescription
+
+	if err := json.NewDecoder(f).Decode(&nd); err != nil {
+		return nameDescription{}, err
+	}
+
+	return nd, nil
+}
+
 func (b *backend) getType(w http.ResponseWriter, r *http.Request) error {
 	moduleName := r.PathValue("module")
 	typeName := r.PathValue("type")
