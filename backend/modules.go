@@ -77,6 +77,11 @@ func (b *backend) listModules(w http.ResponseWriter, r *http.Request) error {
 	return json.NewEncoder(w).Encode(modules)
 }
 
+type moduleWithTypes struct {
+	nameDescription
+	types []nameDescription
+}
+
 func (b *backend) getModule(w http.ResponseWriter, r *http.Request) error {
 	name := r.PathValue("module")
 	base := filepath.Join(b.path, name)
@@ -85,7 +90,7 @@ func (b *backend) getModule(w http.ResponseWriter, r *http.Request) error {
 		return ErrInvalidName
 	}
 
-	f, err := os.Open(filepath.Join(base, description))
+	description, err := os.ReadFile(filepath.Join(base, description))
 	if err != nil {
 		if os.IsNotExist(err) {
 			return fmt.Errorf("%w: %s", ErrNoModule, name)
@@ -94,11 +99,18 @@ func (b *backend) getModule(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	defer f.Close()
+	var module moduleWithTypes
+	module.Name = name
+	module.Description = string(description)
 
-	_, err = io.Copy(w, f)
+	module.types, err = b.readTypes(name)
+	if err != nil {
+		return err
+	}
 
-	return err
+	w.Header().Set("Content-Type", "application/json")
+
+	return json.NewEncoder(w).Encode(module)
 }
 
 func (b *backend) renameModule(w http.ResponseWriter, r *http.Request) error {

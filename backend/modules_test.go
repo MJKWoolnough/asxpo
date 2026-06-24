@@ -63,7 +63,7 @@ func TestModules(t *testing.T) {
 			Method:   http.MethodGet,
 			URL:      "/modules/some-module",
 			Code:     http.StatusOK,
-			Response: "some data",
+			Response: "{\"Name\":\"some-module\",\"Description\":\"some data\"}\n",
 		},
 		{ // 8
 			Method: http.MethodPut,
@@ -75,7 +75,7 @@ func TestModules(t *testing.T) {
 			Method:   http.MethodGet,
 			URL:      "/modules/some-module",
 			Code:     http.StatusOK,
-			Response: "some other data",
+			Response: "{\"Name\":\"some-module\",\"Description\":\"some other data\"}\n",
 		},
 		{ // 10
 			Method:   http.MethodPost,
@@ -114,7 +114,7 @@ func TestModules(t *testing.T) {
 			Method:   http.MethodGet,
 			URL:      "/modules/new-name",
 			Code:     http.StatusOK,
-			Response: "some other data",
+			Response: "{\"Name\":\"new-name\",\"Description\":\"some other data\"}\n",
 		},
 		{ // 16
 			Method:   http.MethodGet,
