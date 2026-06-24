@@ -81,7 +81,7 @@ func (b *backend) renameType(w http.ResponseWriter, r *http.Request) error {
 	typeName := r.PathValue("type")
 	newName := r.PathValue("name")
 
-	if strings.ContainsAny(newName, "/\x00") {
+	if strings.ContainsAny(moduleName, "/\x00") || strings.ContainsAny(typeName, "/\x00") || strings.ContainsAny(newName, "/\x00") {
 		return ErrInvalidName
 	}
 
