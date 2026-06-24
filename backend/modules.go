@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 const description = "description"
@@ -16,7 +15,7 @@ const description = "description"
 func (b *backend) setModule(w http.ResponseWriter, r *http.Request) error {
 	name := r.PathValue("module")
 
-	if strings.ContainsAny(name, "/\x00") {
+	if !validatePaths(name) {
 		return ErrInvalidName
 	}
 
@@ -82,6 +81,10 @@ func (b *backend) getModule(w http.ResponseWriter, r *http.Request) error {
 	name := r.PathValue("module")
 	base := filepath.Join(b.path, name)
 
+	if !validatePaths(name) {
+		return ErrInvalidName
+	}
+
 	f, err := os.Open(filepath.Join(base, description))
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -101,6 +104,10 @@ func (b *backend) getModule(w http.ResponseWriter, r *http.Request) error {
 func (b *backend) renameModule(w http.ResponseWriter, r *http.Request) error {
 	name := r.PathValue("module")
 	newName := r.PathValue("name")
+
+	if !validatePaths(name, newName) {
+		return ErrInvalidName
+	}
 
 	if name == newName {
 		w.WriteHeader(http.StatusNotModified)
@@ -127,7 +134,7 @@ func (b *backend) renameModule(w http.ResponseWriter, r *http.Request) error {
 func (b *backend) deleteModule(w http.ResponseWriter, r *http.Request) error {
 	name := r.PathValue("module")
 
-	if strings.ContainsAny(name, "/\x00") {
+	if !validatePaths(name) {
 		return ErrInvalidName
 	}
 

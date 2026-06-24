@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"strings"
 
 	"vimagination.zapto.org/httpbuffer"
 )
@@ -64,4 +65,14 @@ func responseCode(err error) int {
 	}
 
 	return http.StatusInternalServerError
+}
+
+func validatePaths(paths ...string) bool {
+	for _, path := range paths {
+		if strings.ContainsAny(path, "/\x00") {
+			return false
+		}
+	}
+
+	return true
 }

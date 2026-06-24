@@ -25,19 +25,18 @@ type mType struct {
 }
 
 func (b *backend) setType(w http.ResponseWriter, r *http.Request) error {
-	moduleName := r.PathValue("module")
+	var t mType
 
-	if strings.ContainsAny(moduleName, "/\x00") {
+	moduleName := r.PathValue("module")
+	t.Name = r.PathValue("type")
+
+	if !validatePaths(moduleName, t.Name) {
 		return ErrInvalidName
 	}
-
-	var t mType
 
 	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
 		return err
 	}
-
-	t.Name = r.PathValue("type")
 
 	if strings.ContainsAny(t.Name, "/\x00") {
 		return ErrInvalidName
@@ -65,6 +64,10 @@ func (b *backend) getType(w http.ResponseWriter, r *http.Request) error {
 	moduleName := r.PathValue("module")
 	typeName := r.PathValue("type")
 
+	if !validatePaths(moduleName, typeName) {
+		return ErrInvalidName
+	}
+
 	f, err := os.Open(filepath.Join(b.path, moduleName, typeName+".typ"))
 	if err != nil {
 		return err
@@ -82,7 +85,7 @@ func (b *backend) renameType(w http.ResponseWriter, r *http.Request) error {
 	typeName := r.PathValue("type")
 	newName := r.PathValue("name")
 
-	if strings.ContainsAny(moduleName, "/\x00") || strings.ContainsAny(typeName, "/\x00") || strings.ContainsAny(newName, "/\x00") {
+	if !validatePaths(moduleName, typeName, newName) {
 		return ErrInvalidName
 	}
 
@@ -101,7 +104,7 @@ func (b *backend) deleteType(w http.ResponseWriter, r *http.Request) error {
 	moduleName := r.PathValue("module")
 	typeName := r.PathValue("type")
 
-	if strings.ContainsAny(moduleName, "/\x00") || strings.ContainsAny(typeName, "/\x00") {
+	if !validatePaths(moduleName, typeName) {
 		return ErrInvalidName
 	}
 
