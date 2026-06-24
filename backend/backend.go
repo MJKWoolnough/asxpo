@@ -51,6 +51,7 @@ var httpErrors = map[error]int{
 	ErrDuplicateName: http.StatusConflict,
 	ErrInvalidName:   http.StatusUnprocessableEntity,
 	ErrNoModule:      http.StatusNotFound,
+	ErrNoType:        http.StatusNotFound,
 }
 
 func responseCode(err error) int {
