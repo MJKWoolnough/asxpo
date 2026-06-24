@@ -49,7 +49,7 @@ func (b *backend) setModule(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-type module struct {
+type nameDescription struct {
 	Name        string
 	Description string
 }
@@ -60,7 +60,7 @@ func (b *backend) listModules(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	modules := make([]module, 0, len(paths))
+	modules := make([]nameDescription, 0, len(paths))
 
 	for _, path := range paths {
 		name := filepath.Base(filepath.Dir(path))
@@ -69,7 +69,7 @@ func (b *backend) listModules(w http.ResponseWriter, r *http.Request) error {
 			return err
 		}
 
-		modules = append(modules, module{Name: name, Description: string(description)})
+		modules = append(modules, nameDescription{Name: name, Description: string(description)})
 	}
 
 	w.Header().Set("Content-Type", "application/json")
