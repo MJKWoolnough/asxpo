@@ -47,7 +47,7 @@ func (b *backend) setType(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	if err := json.NewEncoder(w).Encode(t); err != nil {
+	if err := json.NewEncoder(f).Encode(t); err != nil {
 		f.Close()
 
 		return err
