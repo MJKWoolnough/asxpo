@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"io/fs"
 	"net/http"
 	"os"
@@ -19,30 +18,30 @@ type field struct {
 }
 
 type mType struct {
-	Name        string
+	Name        string `json:",omitempty"`
 	Description string
 	Fields      []field
 }
 
 func (b *backend) setType(w http.ResponseWriter, r *http.Request) error {
-	var t mType
-
 	moduleName := r.PathValue("module")
-	t.Name = r.PathValue("type")
+	typeName := r.PathValue("type")
 
-	if !validatePaths(moduleName, t.Name) {
+	if !validatePaths(moduleName, typeName) {
 		return ErrInvalidName
 	}
+
+	var t mType
 
 	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
 		return err
 	}
 
-	if strings.ContainsAny(t.Name, "/\x00") {
+	if strings.ContainsAny(typeName, "/\x00") {
 		return ErrInvalidName
 	}
 
-	f, err := os.Create(filepath.Join(b.path, moduleName, t.Name+".typ"))
+	f, err := os.Create(filepath.Join(b.path, moduleName, typeName+".typ"))
 	if err != nil {
 		return err
 	}
@@ -94,6 +93,8 @@ func readType(typ string) (nameDescription, error) {
 		return nameDescription{}, err
 	}
 
+	nd.Name = filepath.Base(typ[:len(typ)-4])
+
 	return nd, nil
 }
 
@@ -107,14 +108,24 @@ func (b *backend) getType(w http.ResponseWriter, r *http.Request) error {
 
 	f, err := os.Open(filepath.Join(b.path, moduleName, typeName+".typ"))
 	if err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Errorf("%w: %s", ErrNoType, typeName)
+		}
+
 		return err
 	}
 
 	defer f.Close()
 
-	_, err = io.Copy(w, f)
+	var mType mType
 
-	return err
+	if err := json.NewDecoder(f).Decode(&mType); err != nil {
+		return err
+	}
+
+	mType.Name = typeName
+
+	return json.NewEncoder(w).Encode(mType)
 }
 
 func (b *backend) renameType(w http.ResponseWriter, r *http.Request) error {
