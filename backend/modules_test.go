@@ -11,18 +11,7 @@ import (
 )
 
 func TestModules(t *testing.T) {
-	s := httptest.NewServer(New(t.TempDir()))
-
-	t.Cleanup(func() { s.Close() })
-
-	for n, test := range [...]struct {
-		Method   string
-		URL      string
-		Body     string
-		Code     int
-		Headers  http.Header
-		Response string
-	}{
+	tests(t, []test{
 		{ // 1
 			Method:   http.MethodGet,
 			URL:      "/modules",
@@ -145,7 +134,26 @@ func TestModules(t *testing.T) {
 			Code:     http.StatusNotFound,
 			Response: "no module with that name: new-name\n",
 		},
-	} {
+	})
+}
+
+type test struct {
+	Method   string
+	URL      string
+	Body     string
+	Code     int
+	Headers  http.Header
+	Response string
+}
+
+func tests(t *testing.T, tests []test) {
+	t.Helper()
+
+	s := httptest.NewServer(New(t.TempDir()))
+
+	t.Cleanup(func() { s.Close() })
+
+	for n, test := range tests {
 		u, err := url.Parse(s.URL + test.URL)
 		if err != nil {
 			t.Fatalf("test %d: unexpected error: %s", n+1, err)
