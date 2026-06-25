@@ -79,7 +79,7 @@ func (b *backend) listModules(w http.ResponseWriter, r *http.Request) error {
 
 type moduleWithTypes struct {
 	nameDescription
-	types []nameDescription
+	Types []nameDescription
 }
 
 func (b *backend) getModule(w http.ResponseWriter, r *http.Request) error {
@@ -103,7 +103,7 @@ func (b *backend) getModule(w http.ResponseWriter, r *http.Request) error {
 	module.Name = name
 	module.Description = string(description)
 
-	module.types, err = b.readTypes(name)
+	module.Types, err = b.readTypes(name)
 	if err != nil {
 		return err
 	}

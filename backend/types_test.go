@@ -17,7 +17,7 @@ func TestTypes(t *testing.T) {
 			Method:   http.MethodGet,
 			URL:      "/modules/some-module",
 			Code:     http.StatusOK,
-			Response: "{\"Name\":\"some-module\",\"Description\":\"some data\"}\n",
+			Response: "{\"Name\":\"some-module\",\"Description\":\"some data\",\"Types\":[]}\n",
 		},
 		{ // 3
 			Method:   http.MethodPut,
