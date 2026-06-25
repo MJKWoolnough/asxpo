@@ -3,6 +3,7 @@ package backend
 import (
 	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
 	"strings"
 
@@ -52,6 +53,7 @@ var httpErrors = map[error]int{
 	ErrInvalidName:   http.StatusUnprocessableEntity,
 	ErrNoModule:      http.StatusNotFound,
 	ErrNoType:        http.StatusNotFound,
+	io.EOF:           http.StatusBadRequest,
 }
 
 func responseCode(err error) int {
