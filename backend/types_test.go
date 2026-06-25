@@ -37,5 +37,28 @@ func TestTypes(t *testing.T) {
 			Code:     http.StatusOK,
 			Response: "{\"Name\":\"some-module\",\"Description\":\"some data\",\"Types\":[{\"Name\":\"myType\",\"Description\":\"My Type\"}]}\n",
 		},
+		{ // 6
+			Method:   http.MethodGet,
+			URL:      "/modules/some-module/myType",
+			Code:     http.StatusOK,
+			Response: "{\"Name\":\"myType\",\"Description\":\"My Type\",\"Fields\":[{\"Name\":\"A\",\"Description\":\"A Field\",\"Type\":\"string\"},{\"Name\":\"B\",\"Description\":\"B Field\",\"Type\":\"int\"}]}\n",
+		},
+		{ // 7
+			Method: http.MethodPost,
+			URL:    "/modules/some-module/myType/newType",
+			Code:   http.StatusNoContent,
+		},
+		{ // 8
+			Method:   http.MethodGet,
+			URL:      "/modules/some-module/myType",
+			Code:     http.StatusNotFound,
+			Response: "no type with that name: myType\n",
+		},
+		{ // 9
+			Method:   http.MethodGet,
+			URL:      "/modules/some-module/newType",
+			Code:     http.StatusOK,
+			Response: "{\"Name\":\"newType\",\"Description\":\"My Type\",\"Fields\":[{\"Name\":\"A\",\"Description\":\"A Field\",\"Type\":\"string\"},{\"Name\":\"B\",\"Description\":\"B Field\",\"Type\":\"int\"}]}\n",
+		},
 	})
 }
