@@ -66,7 +66,7 @@ func (b *backend) readTypes(moduleName string) ([]nameDescription, error) {
 		return nil, err
 	}
 
-	var types []nameDescription
+	types := []nameDescription{}
 
 	for _, typ := range paths {
 		t, err := readType(typ)
