@@ -156,14 +156,14 @@ func (b *backend) deleteType(w http.ResponseWriter, r *http.Request) error {
 		return ErrInvalidName
 	}
 
-	path := filepath.Join(b.path, moduleName, typeName)
+	path := filepath.Join(b.path, moduleName, typeName+".typ")
 
 	_, err := os.Stat(path)
 	if os.IsNotExist(err) {
 		return fmt.Errorf("%w: %s", ErrNoType, typeName)
 	}
 
-	return os.RemoveAll(path)
+	return os.Remove(path)
 }
 
 var ErrNoType = fmt.Errorf("no type with that name")
