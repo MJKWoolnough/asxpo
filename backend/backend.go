@@ -30,6 +30,7 @@ func New(path string) http.Handler {
 
 	mux.Handle("GET /modules/{module}/{type}", handler(b.getType))
 	mux.Handle("PUT /modules/{module}/{type}", handler(b.setType))
+	mux.Handle("PATCH /modules/{module}/{type}", handler(b.updateType))
 	mux.Handle("POST /modules/{module}/{type}/{name}", handler(b.renameType))
 	mux.Handle("DELETE /modules/{module}/{type}", handler(b.deleteType))
 
