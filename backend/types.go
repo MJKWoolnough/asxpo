@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 type field struct {
@@ -35,10 +34,6 @@ func (b *backend) setType(w http.ResponseWriter, r *http.Request) error {
 
 	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
 		return err
-	}
-
-	if strings.ContainsAny(typeName, "/\x00") {
-		return ErrInvalidName
 	}
 
 	return b.writeType(moduleName, typeName, t)
