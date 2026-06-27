@@ -41,6 +41,10 @@ func (b *backend) setType(w http.ResponseWriter, r *http.Request) error {
 		return ErrInvalidName
 	}
 
+	return b.writeType(moduleName, typeName, t)
+}
+
+func (b *backend) writeType(moduleName, typeName string, t mType) error {
 	f, err := os.Create(filepath.Join(b.path, moduleName, typeName+".typ"))
 	if err != nil {
 		return err
@@ -52,11 +56,46 @@ func (b *backend) setType(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	if err := f.Close(); err != nil {
+	return f.Close()
+}
+
+type typePatch struct {
+	Description *string
+	Fields      *[]field
+}
+
+func (b *backend) updateType(w http.ResponseWriter, r *http.Request) error {
+	moduleName := r.PathValue("module")
+	typeName := r.PathValue("type")
+
+	if !validatePaths(moduleName, typeName) {
+		return ErrInvalidName
+	}
+
+	var t typePatch
+
+	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
 		return err
 	}
 
-	return nil
+	if t.Description == nil && t.Fields == nil {
+		return ErrNoPatch
+	}
+
+	mType, err := b.readTypeData(moduleName, typeName)
+	if err != nil {
+		return err
+	}
+
+	if t.Description != nil {
+		mType.Description = *t.Description
+	}
+
+	if t.Fields != nil {
+		mType.Fields = *t.Fields
+	}
+
+	return b.writeType(moduleName, typeName, mType)
 }
 
 func (b *backend) readTypes(moduleName string) ([]nameDescription, error) {
@@ -106,13 +145,22 @@ func (b *backend) getType(w http.ResponseWriter, r *http.Request) error {
 		return ErrInvalidName
 	}
 
+	mType, err := b.readTypeData(moduleName, typeName)
+	if err != nil {
+		return err
+	}
+
+	return json.NewEncoder(w).Encode(mType)
+}
+
+func (b *backend) readTypeData(moduleName, typeName string) (mType, error) {
 	f, err := os.Open(filepath.Join(b.path, moduleName, typeName+".typ"))
 	if err != nil {
 		if os.IsNotExist(err) {
-			return fmt.Errorf("%w: %s", ErrNoType, typeName)
+			return mType{}, fmt.Errorf("%w: %s", ErrNoType, typeName)
 		}
 
-		return err
+		return mType{}, err
 	}
 
 	defer f.Close()
@@ -120,12 +168,12 @@ func (b *backend) getType(w http.ResponseWriter, r *http.Request) error {
 	var mType mType
 
 	if err := json.NewDecoder(f).Decode(&mType); err != nil {
-		return err
+		return mType, err
 	}
 
 	mType.Name = typeName
 
-	return json.NewEncoder(w).Encode(mType)
+	return mType, nil
 }
 
 func (b *backend) renameType(w http.ResponseWriter, r *http.Request) error {
@@ -166,4 +214,7 @@ func (b *backend) deleteType(w http.ResponseWriter, r *http.Request) error {
 	return os.Remove(path)
 }
 
-var ErrNoType = fmt.Errorf("no type with that name")
+var (
+	ErrNoType  = fmt.Errorf("no type with that name")
+	ErrNoPatch = errors.New("empty patch")
+)
