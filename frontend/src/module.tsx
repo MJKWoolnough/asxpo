@@ -6,7 +6,8 @@ import {goto} from "@router";
 import {getModule, setModule, setType} from "./endpoints.js";
 import Form from "./form.js";
 import Shadow from "./shadow.js";
-import {Add, Edit, Remove} from "./symbols.js";
+import {Add, Edit} from "./symbols.js";
+import {Fields, types} from "./type.js";
 
 const id = Object.freeze(["id"]),
       css = [new CSS().add({
@@ -29,41 +30,7 @@ const id = Object.freeze(["id"]),
 			"font-style": "italic"
 		}
 	}
-})],
-      Fields = ({types}: {"types": string[]}) => {
-	const adder = <li>
-		<button type="button" onclick={() => {
-			const field = {"Name": "", "Type": "", "Description": ""};
-
-			fields.push(field);
-
-			adder.before(<li>
-				<input type="text" onchange={function(this: HTMLInputElement) {field.Name = this.value}} placeholder="Name" required />
-				<input type="text" onchange={function(this: HTMLInputElement) {field.Type = this.value}} placeholder="Type" required list="types" />
-				<input type="text" onchange={function(this: HTMLInputElement) {field.Type = this.value}} placeholder="Description" />
-				<button type="button" onclick={function(this: HTMLButtonElement) {
-					const index = fields.indexOf(field);
-
-					if (index >= 0) {
-						fields.splice(index, 1);
-					}
-
-					this.parentElement?.remove();
-				}}><Remove title="Remove Field" /></button>
-			</li>);
-		}}>+</button>
-		<datalist id="types">
-			{types.map(t => <option>{t}</option>)}
-		</datalist>
-	</li> as HTMLLIElement,
-	      fields: Field[] = [];
-
-	return Object.assign(<ul label="Fields">{adder}</ul>, {"value": fields});
-      },
-      types: string[] = [
-	      "string",
-	      "int"
-      ];
+})];
 
 export default bindCustomElement("aspxo-module", class Module extends HTMLElement {
 	#name = bind("");
