@@ -9,7 +9,7 @@ import Shadow from "./shadow.js";
 import {Add, Edit} from "./symbols.js";
 import {Fields, types} from "./type.js";
 
-const id = Object.freeze(["id"]),
+const attrs = Object.freeze(["module"]),
       css = [new CSS().add({
 	"button:has(>svg)": {
 		"border": 0,
@@ -60,7 +60,7 @@ export default bindCustomElement("aspxo-module", class Module extends HTMLElemen
 	}
 
 	static get observedAttributes() {
-		return id;
+		return attrs;
 	}
 
 	attributeChangedCallback(_id: string, _oldValue: string, newValue: string) {

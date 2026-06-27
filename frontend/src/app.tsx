@@ -11,7 +11,7 @@ ready.then(() => {
 		<h1 style={{"font-family": "arial"}}>ΑΣΞΠΩ</h1>
 		{
 			router()
-			.add("/modules/:id", Module)
+			.add("/modules/:module", Module)
 			.add("/", Modules)
 		}
 	</>)
