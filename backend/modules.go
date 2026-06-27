@@ -127,8 +127,7 @@ func (b *backend) renameModule(w http.ResponseWriter, r *http.Request) error {
 		return nil
 	}
 
-	err := os.Rename(filepath.Join(b.path, name), filepath.Join(b.path, newName))
-	if os.IsNotExist(err) {
+	if err := os.Rename(filepath.Join(b.path, name), filepath.Join(b.path, newName)); os.IsNotExist(err) {
 		return fmt.Errorf("%w: %s", ErrNoModule, name)
 	} else if os.IsExist(err) {
 		return fmt.Errorf("%w: %s", ErrDuplicateName, newName)
@@ -152,8 +151,7 @@ func (b *backend) deleteModule(w http.ResponseWriter, r *http.Request) error {
 
 	path := filepath.Join(b.path, name)
 
-	_, err := os.Stat(path)
-	if os.IsNotExist(err) {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return fmt.Errorf("%w: %s", ErrNoModule, name)
 	}
 
