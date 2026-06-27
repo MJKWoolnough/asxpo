@@ -210,6 +210,6 @@ func (b *backend) deleteType(w http.ResponseWriter, r *http.Request) error {
 }
 
 var (
-	ErrNoType  = fmt.Errorf("no type with that name")
+	ErrNoType  = errors.New("no type with that name")
 	ErrNoPatch = errors.New("empty patch")
 )
