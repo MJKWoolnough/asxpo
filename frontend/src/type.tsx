@@ -8,7 +8,7 @@ import Form from "./form.js";
 import Shadow from "./shadow.js";
 import {Add, Edit, Remove} from "./symbols.js";
 
-const id = Object.freeze(["id"]),
+const attrs = Object.freeze(["module", "type"]),
       css = [new CSS()];
 
 export const Fields = ({types}: {"types": string[]}) => {
@@ -66,28 +66,37 @@ export default bindCustomElement("aspxo-type", class Type extends HTMLElement {
 				<Fields types={types} />
 			</Form>}><Add title="Add Type" /></button>
 		</Shadow>
+
+		bind((module, typ) => {
+			if (module && typ) {
+				getType(module, typ)
+				.then(type => {
+					this.#module(module);
+					this.#name(typ);
+					this.#description(type.Description);
+				})
+				.catch(e => {
+					alert(e.message);
+					goto("/");
+				});
+			}
+		}, this.#module, this.#name)
 	}
 
 	static get observedAttributes() {
-		return id;
+		return attrs;
 	}
 
-	attributeChangedCallback(_id: string, _oldValue: string, newValue: string) {
+	attributeChangedCallback(name: string, _oldValue: string, newValue: string) {
 		if (!newValue) {
 			return;
 		}
 
-		const [module, typ] = newValue.split("/", 2);
-
-		getType(module, typ)
-		.then(type => {
-			this.#module(module);
-			this.#name(typ);
-			this.#description(type.Description);
-		})
-		.catch(e => {
-			alert(e.message);
-			goto("/");
-		});
+		switch (name) {
+		case "module":
+			this.#module(newValue)
+		case "type":
+			this.#name(newValue);
+		}
 	}
 });
