@@ -67,11 +67,23 @@ func TestTypes(t *testing.T) {
 			Response: "{\"Name\":\"newType\",\"Description\":\"New Type\",\"Fields\":[{\"Name\":\"A\",\"Description\":\"A Field\",\"Type\":\"string\"},{\"Name\":\"B\",\"Description\":\"B Field\",\"Type\":\"int\"}]}\n",
 		},
 		{ // 11
+			Method: http.MethodPatch,
+			URL:    "/modules/some-module/newType",
+			Body:   `{"Fields":[{"Name": "A", "Description": "New A Field", "Type": "string"}, {"Name": "B", "Description": "New B Field", "Type": "int"}]}`,
+			Code:   http.StatusNoContent,
+		},
+		{ // 12
+			Method:   http.MethodGet,
+			URL:      "/modules/some-module/newType",
+			Code:     http.StatusOK,
+			Response: "{\"Name\":\"newType\",\"Description\":\"New Type\",\"Fields\":[{\"Name\":\"A\",\"Description\":\"New A Field\",\"Type\":\"string\"},{\"Name\":\"B\",\"Description\":\"New B Field\",\"Type\":\"int\"}]}\n",
+		},
+		{ // 13
 			Method: http.MethodDelete,
 			URL:    "/modules/some-module/newType",
 			Code:   http.StatusNoContent,
 		},
-		{ // 12
+		{ // 14
 			Method:   http.MethodGet,
 			URL:      "/modules/some-module/newType",
 			Code:     http.StatusNotFound,
