@@ -54,6 +54,7 @@ var httpErrors = map[error]int{
 	ErrInvalidName:   http.StatusUnprocessableEntity,
 	ErrNoModule:      http.StatusNotFound,
 	ErrNoType:        http.StatusNotFound,
+	ErrNoPatch:       http.StatusUnprocessableEntity,
 	io.EOF:           http.StatusBadRequest,
 }
 
