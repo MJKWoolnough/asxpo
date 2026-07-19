@@ -80,7 +80,7 @@ add({
 
 export default ({legend: legendText, preamble, submit, onsubmit, onsuccess}: {legend: string; preamble?: string; submit: string; onsubmit: (...args: any[]) => Promise<unknown>, onsuccess?: () => void}, elements: (HTMLElement & {"value": unknown})[] = []) => {
 	 const fs = <fieldset>
-	 	<legend>{legendText}</legend>
+		<legend>{legendText}</legend>
 		{preamble ? <div>{preamble}</div> : []}
 		{elements.map(e => {
 			const lid = id();
@@ -96,7 +96,7 @@ export default ({legend: legendText, preamble, submit, onsubmit, onsuccess}: {le
 		</div>
 	       </fieldset>,
 	       overlay = <dialog id="module_desc" onclose={() => overlay.remove()} closedby="any">
-	 	<form onsubmit={function (this: HTMLFormElement, e: Event) {
+		<form onsubmit={function (this: HTMLFormElement, e: Event) {
 			if (!this.reportValidity()) {
 				return;
 			}
