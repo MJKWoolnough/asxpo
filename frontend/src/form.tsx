@@ -108,7 +108,7 @@ export default ({legend: legendText, preamble, submit, onsubmit, onsuccess}: {le
 			onsubmit.apply(null, elements.map(e => e.value))
 			.then(() => {
 				overlay.close();
-				onsuccess && onsuccess();
+				onsuccess?.();
 			})
 			.catch(e => {
 				alert(`Failed to ${legendText}: ${e.message}`);
