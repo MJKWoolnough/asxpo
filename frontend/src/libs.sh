@@ -22,7 +22,7 @@ libs() {
 		if $first; then
 			first=false;
 		else
-			echo -n ",";
+			echo -n ", ";
 		fi;
 
 		echo -n "\"@$(basename "$i" ".ts")\": $o\"./${i:0:-3}$ext\"$c";
