@@ -94,8 +94,8 @@ export default ({legend: legendText, preamble, submit, onsubmit, onsuccess}: {le
 			<button type="submit">{submit}</button>
 			<button type="button" commandfor="module_desc" command="close">Cancel</button>
 		</div>
-	       </fieldset>,
-	       overlay = <dialog id="module_desc" onclose={() => overlay.remove()} closedby="any">
+	      </fieldset>,
+	      overlay = <dialog id="module_desc" onclose={() => overlay.remove()} closedby="any">
 		<form onsubmit={function (this: HTMLFormElement, e: Event) {
 			if (!this.reportValidity()) {
 				return;
@@ -114,10 +114,8 @@ export default ({legend: legendText, preamble, submit, onsubmit, onsuccess}: {le
 				alert(`Failed to ${legendText}: ${e.message}`);
 				fs.disabled = false;
 			});
-		}}>
-			{fs}
-		</form>
-	       </dialog>;
+		}}>{fs}</form>
+	      </dialog>;
 
 	document.body.append(overlay);
 	overlay.showModal();
