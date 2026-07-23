@@ -6,7 +6,7 @@ const str = Str(),
       field = Obj({
 	"Name": str,
 	"Type": str,
-	"Description": str,
+	"Description": str
       }),
       nameDescription = Obj({"Name": str, "Description": str});
 
