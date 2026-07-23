@@ -16,5 +16,5 @@ ready.then(() => {
 			.add("/modules/:module/:type", Type)
 			.add("/", Modules)
 		}
-	</>)
+	</>);
 });
