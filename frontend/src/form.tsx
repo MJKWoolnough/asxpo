@@ -83,7 +83,7 @@ export default ({legend: legendText, preamble, submit, onsubmit, onsuccess}: {le
 		<legend>{legendText}</legend>
 		{preamble ? <div>{preamble}</div> : []}
 		{elements.map(e => {
-			const lid = id();
+			const lid = e.getAttribute("id") ?? id();
 
 			return <>
 				<label for={lid}>{e.getAttribute("label")}</label>
