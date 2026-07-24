@@ -35,5 +35,5 @@ libs() {
 	echo -n "}";
 }
 
-sed -i 's|<script type="importmap">.*<\/script>|<script type="importmap">'"$(libs js)"'<\/script>|g' index.html
+sed -i 's|<script type="importmap">.*<\/script>|<script type="importmap">'"$(libs js)"'<\/script>|g' index.html;
 sed -i 's|"paths": .*|"paths": '"$(libs ts)"'|' tsconfig.json;
