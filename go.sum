@@ -1,5 +1,7 @@
-vimagination.zapto.org/httpbuffer v1.1.4 h1:f4IAM1Rim14j4Luve70mAtm6iWupMoMun68Ez91+9jE=
-vimagination.zapto.org/httpbuffer v1.1.4/go.mod h1:9fqSQiOj7vkizDrNDI8Ws6By82rDlSeW/Muesf29Eeo=
+github.com/klauspost/compress v1.19.1 h1:VsB4HPswih7mmZ8WleSFQ75c/Ui1M4trX5oAsJnhSlk=
+github.com/klauspost/compress v1.19.1/go.mod h1:cwPg85FWrGar70rWktvGQj8/hthj3wpl0PGDogxkrSQ=
+vimagination.zapto.org/httpbuffer v1.1.6 h1:68P1uzJfrN75NnMGYUMotBwJXRqlyIDj17Sf4WtWrPs=
+vimagination.zapto.org/httpbuffer v1.1.6/go.mod h1:lR68Uiu1s7CegWeyCE/xU5ELedPeG1F6+a6gym1X5ec=
 vimagination.zapto.org/httpembed v1.4.1 h1:dmZ3fcYxzMmLC4Lpw8GKM3nQTK4u70VCntpbfadg2Hw=
 vimagination.zapto.org/httpembed v1.4.1/go.mod h1:hCiEAdA0eabVFCiupL8E0/ZkS974ZBbjSxG01O1Ipdg=
 vimagination.zapto.org/httpencoding v1.1.2 h1:kpxoyNoEzddQxp0fhibxuo3deZm3p0w/5vEiY2kr2Ko=
