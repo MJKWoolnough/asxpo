@@ -1,12 +1,14 @@
 package backend
 
 import (
+	"compress/gzip"
 	"encoding/json"
 	"errors"
 	"io"
 	"net/http"
 	"strings"
 
+	"github.com/klauspost/compress/zstd"
 	"vimagination.zapto.org/httpbuffer"
 )
 
@@ -34,19 +36,15 @@ func New(path string) http.Handler {
 	mux.Handle("POST /modules/{module}/{type}/{name}", handler(b.renameType))
 	mux.Handle("DELETE /modules/{module}/{type}", handler(b.deleteType))
 
-	return &mux
+	return httpbuffer.New(&mux, httpbuffer.Zstd(zstd.SpeedBestCompression), httpbuffer.Gzip(gzip.BestCompression))
 }
 
 type handler func(w http.ResponseWriter, r *http.Request) error
 
 func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	httpbuffer.Handler{
-		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if err := h(w, r); err != nil {
-				http.Error(w, err.Error(), responseCode(err))
-			}
-		}),
-	}.ServeHTTP(w, r)
+	if err := h(w, r); err != nil {
+		http.Error(w, err.Error(), responseCode(err))
+	}
 }
 
 var httpErrors = map[error]int{
